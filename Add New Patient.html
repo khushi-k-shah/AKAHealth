@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> AKAHealth Add New Patient </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <link rel="stylesheet" href="app.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="display-4">Add New Patient</h1>
+        <p class="lead">Please enter the patient information.</p>
+    
+        <form action="#nowhere">
+            <div class="form-group">
+                <label for="patient_name" class="form-label">Patient Name</label>
+                <input type="name" class="form-control" id="patient_name" placeholder="Patient Name">
+            </div>
+            <!-- gender -->
+            <label for="gender" class="form-label">Gender</label>
+            <div class="col-sm-10">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="female" id="F_gender" value="option1" checked>
+                  <label class="form-check-label" for="gridRadios1">
+                    Female
+                  </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="male" id="M_gender" value="option2">
+                    <label class="form-check-label" for="gridRadios2">
+                      Male
+                    </label>
+                  </div>
+            </div>
+            <div class="form-group">
+                <label for="patient_DOB" class="form-label">Date of Birth</label>
+                <input type="DOB" class="form-control" id="patient_DOB" placeholder="Date of Birth">
+                <div id="patient_DOB" class="form-text">Please enter the date of birth in the following format: MM-DD-YYYY </div>
+            </div>
+            <div class="form-group">
+                <label for="patient_phone_num" class="form-label">Phone Number</label>
+                <input type="phone_number" class="form-control" id="patient_phone_num" placeholder="Phone Number">
+            </div>
+            <div class="form-group">
+                <label for="patient_address" class="form-label">Address</label>
+                <input type="patient_address" class="form-control" id="patient_address" placeholder="Address">
+            </div>
+            <div class="form-group">
+                <label for="patient_insurance_ID" class="form-label">Insurance</label>
+                <input type="patient_insurance_ID" class="form-control" id="patient_insurance_ID" placeholder="Insurance">
+            </div>
+            <div class="form-group">
+                <label for="patient_curr_medication" class="form-label">Current Medication</label>
+                <input type="patient_curr_medication" class="form-control" id="patient_curr_medication" placeholder="Current Medication">
+            </div>
+            <div class="form-group">
+                <label for="patient_health_condition" class="form-label">Health Condition</label>
+                <input type="patient_health_condition" class="form-control" id="patient_health_condition" placeholder="Health Condition">
+            </div>
+            <div class="mb-3 form-check"></div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-success">Main Menu</button>
+            </div>
+            
+        </form>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js" integrity="sha384-SR1sx49pcuLnqZUnnPwx6FCym0wLsk5JZuNx2bPPENzswTNFaQU1RDvt3wT4gWFG" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.min.js" integrity="sha384-j0CNLUeiqtyaRmlzUHCPZ+Gy5fQu0dQ6eZ/xAww941Ai1SxSY+0EQqNXNE6DZiVc" crossorigin="anonymous"></script>
+</body>
+
+</html>
