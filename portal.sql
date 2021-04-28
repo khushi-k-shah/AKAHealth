@@ -15,8 +15,9 @@ CREATE TABLE IF NOT EXISTS `Basic_Patient_Info` (
   `patient_ID` int(11) NOT NULL,
   `name` varchar(50) NOT NULL,
   `age` int(11) NOT NULL,
+  `date_of_birth` DATE NOT NULL,
   `gender` varchar(50) NOT NULL,
-  `phone_number` int(10) NOT NULL,
+  `phone_number` BIGINT NOT NULL,
   `address` varchar(50) NOT NULL,
   `current_medication` varchar(50) NOT NULL,
   `underlying_health_condition` varchar(50) NOT NULL,
@@ -50,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `Appointments_Table` (
   `patient_ID` int(11) NOT NULL,
   `symptoms` varchar(50) NOT NULL,
   `treatment` varchar(50) NOT NULL,
-  `appointment_time` varchar(50) NOT NULL,
+  `appointment_time` DATETIME NOT NULL,
   `doctor_type` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -99,14 +100,14 @@ ALTER TABLE `Employee_Accesses`
   ADD PRIMARY KEY (`appointment_time`);
 
 
-INSERT INTO `Basic_Patient_Info` (`patient_ID`, `name`, `age`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES
-(1250, 'Bob', 21, 'male', 4087449840, '125 Sesame Street', 'percocet', 'Moderate pain', 1),
-(1251, 'Hailey', 12, 'female', 6507843840, '332 State Street', 'tylenol', 'none', 2),
-(1252, 'Sara', 57, 'female', 4056349840, '370 South Street', 'vitamin', 'Iron deficiency', 3),
-(1253, 'Anisha', 42, 'female', 4087673840, '154 Season Street', 'N/A', 'N/A', 2),
-(1254, 'Naya', 33, 'female', 4784849840, '384 Saratoga Street', 'N/A', 'N/A', 1),
-(1255, 'Gabe', 25, 'male', 4087840230, '496 Seeme Street', 'N/A', 'N/A', 1),
-(1256, 'Timothy', 17, 'male', 4087573840, '204 Sequioa Street', 'N/A', 'N/A', 3);
+INSERT INTO `Basic_Patient_Info` (`patient_ID`, `name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES
+(1250, 'Bob', 21, '2000-12-20', 'male', 4087449840, '125 Sesame Street', 'percocet', 'Moderate pain', 1),
+(1251, 'Hailey', 12, '2009-08-25', 'female', 6507843840, '332 State Street', 'tylenol', 'none', 2),
+(1252, 'Sara', 57, '1964-05-05', 'female', 4056349840, '370 South Street', 'vitamin', 'Iron deficiency', 3),
+(1253, 'Anisha', 42, '1979-01-13', 'female', 4087673840, '154 Season Street', 'N/A', 'N/A', 2),
+(1254, 'Naya', 33,'1998-02-16', 'female', 4784849840, '384 Saratoga Street', 'N/A', 'N/A', 1),
+(1255, 'Gabe', 25, '1996-04-18', 'male', 4087840230, '496 Seeme Street', 'N/A', 'N/A', 1),
+(1256, 'Timothy', 17, '2004-07-02', 'male', 4087573840, '204 Sequioa Street', 'N/A', 'N/A', 3);
 
 
 INSERT INTO `Employee_Info` (`employee_ID`, `name`, `employee_type`, `office_name`) VALUES
