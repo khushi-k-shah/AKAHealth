@@ -1,7 +1,6 @@
 'use strict'
 
 
-console.log('hello from node js');
 
 var express = require("express");
 const http = require('http');
@@ -12,7 +11,7 @@ var fs = require("fs");
 
 const app = express();
 
-var express = require("express");
+
 var mysql = require('mysql');
 
 var con = mysql.createConnection({
@@ -22,22 +21,76 @@ var con = mysql.createConnection({
     database: "cs348proj"
   });
 
-app.use(express.static(__dirname + "/public"));
+app.set('view engine', 'ejs')
+app.set('views', path.join(__dirname, '/views'))
 
-const signUp = app.use('/MainMenu', (req, res, next) => {
-  console.log(req);
-  //res.writeHeader(200, {"Content-Type: index"})
-  res.sendFile(__dirname+"/public/MainMenu.html")
-  //res.render("./public/MainMenu.html")
-  
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.urlencoded({extended:true}))
+app.use(express.json())
+
+app.get('/', (req, res) => {
+  console.log('index')
+  res.render('index', {title: "Login Page"})
 });
+
+app.get('/MainMenu', (req, res) => {
+  console.log('mainmenu')
+  res.render('MainMenu', {title: "Main Menu"})
+});
+
+app.get('/AddNewEmployee', (req, res) => {
+  console.log('AddNewEmployee')
+  res.render('AddNewEmployee', {title: "Sign Up"})
+});
+
+app.post('/AddNewEmployee', (req, res) => {
+  console.log('AddNewEmployee')
+  console.log(req)
+  res.render('AddNewEmployee', {title: "Sign Up"})
+});
+
+app.get('/AddNewPatient', (req, res) => {
+  console.log('AddNewPatient')
+  res.render('AddNewPatient', {title: "Add New Patient"})
+});
+
+app.get('/AddToAppointmentTable', (req, res) => {
+  console.log('AddToAppointmentTable')
+  res.render('AddToAppointmentTable', {title: "Add New Appointment"})
+});
+
+app.get('/PatientFilteration', (req, res) => {
+  console.log('PatientFilteration GET')
+  res.render('PatientFilteration', {title: "Patient Filteration", data: null})
+});
+
+app.post('/PatientFilteration', (req, res) => {
+  console.log('PatientFilteration POST')
+  console.log(req)
+  const {name, patient_DOB} = req.body
+  con.query("SELECT * FROM Basic_Patient_Info WHERE name = \"" + name + "\" AND date_of_birth = \"" + patient_DOB+"\"", function (err, result, fields) {
+    if (err) throw err;
+    res.render('PatientFilteration', {title: "Patient Filteration", data: result})
+  });
+
+  //res.render('Patient Filteration', {title: "Patient Filteration", data: result})
+});
+
+// Bob 2000-12-20
+
+app.get('/TablesToEdit', (req, res) => {
+  console.log('TablesToEdit')
+  res.render('TablesToEdit', {title: "Edit Patient Info"})
+});
+
+
 
 //router.get("/signup", signUp);
 
-const sendIndex = app.use('/', (req, res, next) => {
-    res.sendFile(path.join(__dirname + "/public/index.html"));
-    
-});
+
+
+
+
 
 // con.connect(function(err) {
 //   if (err) throw err;
@@ -45,14 +98,10 @@ const sendIndex = app.use('/', (req, res, next) => {
 // });
 
 
-
-//router.get("/", sendIndex);
-
-
-
 //module.exports = router;
 
 app.listen(3000);
+
 
 
 // con.query("SELECT employee_ID, name, employee_type, office_name FROM Employee_Info", function (err, result, fields) {

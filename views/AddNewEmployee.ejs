@@ -1,0 +1,53 @@
+<%- include('partials/header') %>
+
+    <div class="container">
+        <div style="margin: 20px; text-align: center;">
+			      <h1 class="display-2">Create An Account</h1>
+
+		    </div>
+	
+        <p class="lead">Please enter your employee information to get started!</p>
+
+
+        <form action="/AddNewEmployee" method="POST">
+          <div class="form-group" name="margin: 20px; margin-left: 0px">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" name="name" id="name" placeholder="name" >
+          </div>
+          <div class="form-group" name="margin: 20px; margin-left: 0px">
+            <label for="name">Username</label>
+            <input type="text" class="form-control" name="username" id="username" placeholder="username" >
+          </div>
+          <div class="form-group" name="margin: 20px; margin-left: 0px">
+            <label for="password">Password</label>
+            <input type="text" class="form-control" name="password" id="password" placeholder="password" >
+          </div>
+          <div class="form-group" style="margin: 20px; margin-left: 0px">
+            <label for="type">Employee Type/Profession</label>
+            <input type="text" class="form-control" name="type" id="type" placeholder="profession">
+          </div>
+          <div class="form-group" style="margin: 20px; margin-left: 0px">
+            <label for="office">Office Name</label>
+            <input type="text" class="form-control" name="office" id="office" placeholder="office name">
+          </div>
+          <div class="mb-3 form-check"></div>
+            <button type="submit" name="Submit" id="Submit" class="btn btn-primary">Create an account</button>
+          </div>
+          
+        </form>
+        <div class="mb-3 form-check"></div>
+
+          <!-- <a href="./Main Menu.html">
+              <button type="submit" class="btn btn-primary">Create an account</button>
+          </a> -->
+          <a href="/">
+              <button type="submit" class="btn btn-dark" style="margin-left: 100px; margin-bottom: 100px; margin-top: -20px;">Cancel</button>
+          </a>
+        </div>
+        
+    
+    </div>
+    
+
+<%- include('partials/footer') %>
+

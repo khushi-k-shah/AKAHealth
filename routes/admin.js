@@ -1,13 +1,14 @@
 
-var express = require("express");
+// var express = require("express");
 
-const router = express("router");
-const path = require("path");
+// const router = express("router");
+// const path = require("path");
 
-const sendIndex = (req, res, next) => {
-    res.sendFile(path.join(__dirname + "/../index.html"));
-}
+// const sendIndex = (req, res, next) => {
+//     res.sendFile(path.join(__dirname + "/../index.html"));
+// }
 
-router.get("/", sendIndex);
+// router.get("/", sendIndex);
 
-module.exports = router;
+// module.exports = router;
+
