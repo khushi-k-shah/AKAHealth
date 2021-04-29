@@ -7,32 +7,41 @@
     
         <form action="/AddToAppointmentTable" method="POST">
             <div class="form-group">
-                <label for="employee_ID" class="form-label">Employee ID</label>
-                <input type="name" class="form-control" id="employee_ID" placeholder="Employee ID Name">
+                <label for="employee_ID">Employee ID</label>
+                <input type="number" class="form-control" name="employee_ID" id="employee_ID" placeholder="Employee ID" >
             </div>
             <div class="form-group">
-                <label for="patient_id" class="form-label">Patient ID</label>
-                <input type="name" class="form-control" id="patient_id" value ="<%= id %>" placeholder="Patient ID">
+                <label for="patient_ID">Patient ID</label>
+                <input type="number" class="form-control" name="patient_ID" value ="<%= id %>" id="patient_ID" placeholder="Patient ID" >
             </div>
             <div class="form-group">
-                <label for="patient_name" class="form-label">Patient Name</label>
-                <input type="name" class="form-control" id="patient_name" value= "<%= name %>" placeholder="Patient Name">
+                <label for="patient_name">Patient Name</label>
+                <input type="text" class="form-control" name="patient_name" value= "<%= name %>" id="patient_name" placeholder="Patient Name" >
             </div>
             <div class="form-group">
-                <label for="symptoms" class="form-label">Symptoms</label>
-                <input type="symptoms" class="form-control" id="symptoms" placeholder="Symptoms">
+                <label for="date">Appointment Date</label>
+                <input type="text" class="form-control" name="date" id="date" placeholder="YYYY-MM-DD" >
+                <div id="date" class="form-text">Please enter the date in the following format: YYYY-MM-DD </div>
             </div>
             <div class="form-group">
-                <label for="treatment" class="form-label">Treatment</label>
-                <input type="treatment" class="form-control" id="treatment" placeholder="Treatment">
+                <label for="time">Appointment Time </label>
+                <input type="time" class="form-control" name="time" id="time" placeholder="0:00" >
             </div>
-
             <div class="form-group">
-                <label for="doctor_type" class="form-label">Doctor Type/Profession</label>
-                <input type="doctor_type" class="form-control" id="doctor_type" placeholder="Doctor Type/Profession">
+                <label for="symptoms">Symptoms</label>
+                <input type="text" class="form-control" name="symptoms" id="symptoms" placeholder="Symptoms" >
             </div>
+            <div class="form-group">
+                <label for="treatment">Treatment</label>
+                <input type="text" class="form-control" name="treatment" id="treatment" placeholder="Treatment" >
+            </div>
+            <div class="form-group">
+                <label for="doctor_type">Doctor Type/Profession</label>
+                <input type="text" class="form-control" name="doctor_type" id="doctor_type" placeholder="Doctor Type/Profession" >
+            </div>
+            
             <div class="form-check">
-                <button type="submit" class="btn btn-primary" style="margin-top: 20px;">Submit</button>
+                <button type="text" class="btn btn-primary" style="margin-top: 20px;">Submit</button>
             </div>
             
             <!-- <button type="submit" class="btn btn-warning">Change Patient</button> -->
