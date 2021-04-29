@@ -162,6 +162,7 @@ app.post('/AddNewPatient', (req, res) => {
 app.get('/AddToAppointmentTable/:id/add', (req, res) => {
   const { id } = req.params;
   console.log('AddToAppointmentTable')
+  
   con.query("SELECT name FROM Basic_Patient_Info WHERE `Patient_ID` = " + id, function (err, result, fields) {
     if (err) throw err;
     var name = result[0].name;
