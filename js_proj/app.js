@@ -162,7 +162,7 @@ app.post('/AddNewPatient', (req, res) => {
 app.get('/AddToAppointmentTable/:id/add', (req, res) => {
   const { id } = req.params;
   console.log('AddToAppointmentTable')
-  
+
   con.query("SELECT name FROM Basic_Patient_Info WHERE `Patient_ID` = " + id, function (err, result, fields) {
     if (err) throw err;
     var name = result[0].name;
@@ -171,8 +171,20 @@ app.get('/AddToAppointmentTable/:id/add', (req, res) => {
 });
 
 app.post('/AddToAppointmentTable', (req, res) => {
+  console.log('AddToAppointmentTable')
+  console.log(req.body)
+  const {employee_ID, patient_ID, patient_name, date, time, symptoms, treatment, doctor_type} = req.body
 
-  console.log(req.body);
+  
+  var datetime = date + "T" + time;
+  // console.log(patient_gender)
+  
+  con.query("INSERT INTO `Appointments_Table` (`employee_ID`, `patient_ID`, `symptoms`, `treatment`, `appointment_time`, `doctor_type`) VALUES (\"" + 
+  employee_ID + "\", \"" + patient_ID + "\", \"" + symptoms + "\", \"" + treatment + "\", " + datetime + ":00 , \"" + doctor_type + "\")", function (err, result, fields) {
+    if (err) throw err;
+    // res.render('AddNewPatient', {title: "Add New Patient", data: result})
+    res.redirect('/MainMenu')
+  });
   res.redirect('/MainMenu') // <-- change!!!!
 });
 
