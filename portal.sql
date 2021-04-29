@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS `Basic_Patient_Info` (
   `patient_ID` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) NOT NULL,
   `age` int(11) NOT NULL,
-  `date_of_birth` DATE NOT NULL,
+  `date_of_birth` varchar(50) NOT NULL,
   `gender` varchar(50) NOT NULL,
   `phone_number` BIGINT NOT NULL,
   `address` varchar(50) NOT NULL,
@@ -47,14 +47,14 @@ CREATE TABLE IF NOT EXISTS `Employee_Info` (
 --
 
 CREATE TABLE IF NOT EXISTS `Appointments_Table` (
-  `appointment_ID` int(11) NOT NULL,
+  `appointment_ID` int(11) NOT NULL AUTO_INCREMENT,
   `employee_ID` int(11) NOT NULL,
   `patient_ID` int(11) NOT NULL,
   `symptoms` varchar(50) NOT NULL,
   `treatment` varchar(50) NOT NULL,
   `appointment_time` DATETIME NOT NULL,
-
-  `doctor_type` varchar(50) NOT NULL
+  `doctor_type` varchar(50) NOT NULL,
+  primary key (`appointment_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 ALTER TABLE `Appointments_Table`
@@ -92,14 +92,14 @@ ALTER TABLE `Login_Info`
 --
 
 CREATE TABLE IF NOT EXISTS `Employee_Accesses` (
-  `appointment_time` varchar(50) NOT NULL,
+  `access_time` varchar(50) NOT NULL,
   `access_type` varchar(50) NOT NULL,
   `employee_ID` int(11) NOT NULL,
   `patient_ID` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 ALTER TABLE `Employee_Accesses`
-  ADD PRIMARY KEY (`appointment_time`);
+  ADD PRIMARY KEY (`access_time`);
 
 
 INSERT INTO `Basic_Patient_Info` (`name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES
@@ -119,11 +119,11 @@ INSERT INTO `Employee_Info` (`name`, `employee_type`, `office_name`) VALUES
 ('Natasha', 'receptionist', 'B');
 
 
-INSERT INTO `Appointments_Table` (`appointment_ID`, `employee_ID`, `patient_ID`, `symptoms`, `treatment`, `appointment_time`, `doctor_type`) VALUES
-(1, 1000, 1256, 'cough', 'motrin prescribed', '2020-11-21 11:23:43', 'family med'),
-(2, 1002, 1254, 'runny nose', 'nasal spray prescribed', '2021-1-19 10:02:56', 'ENT'),
-(3, 1000, 1253, 'stomache ache', 'N/A', '2021-11-16 13:07:22', 'gastroenterologist'),
-(4, 1002, 1251, 'rash', 'ointment prescribed', '2020-11-03 18:27:24', 'dermatologist');
+INSERT INTO `Appointments_Table` (`employee_ID`, `patient_ID`, `symptoms`, `treatment`, `appointment_time`, `doctor_type`) VALUES
+(1, 2, 'cough', 'motrin prescribed', '2020-11-21 11:23:43', 'family med'),
+(2, 2, 'runny nose', 'nasal spray prescribed', '2021-1-19 10:02:56', 'ENT'),
+(3, 1, 'stomache ache', 'N/A', '2021-11-16 13:07:22', 'gastroenterologist'),
+(4, 2, 'rash', 'ointment prescribed', '2020-11-03 18:27:24', 'dermatologist');
 
 INSERT INTO `Insurance` (`insurance_ID`, `type`, `company_name`) VALUES
 (1, 'health', 'aetna'),
