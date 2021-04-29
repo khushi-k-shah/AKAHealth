@@ -72,12 +72,19 @@ app.get('/AddNewPatient', (req, res) => {
 app.post('/AddNewPatient', (req, res) => {
   console.log('AddNewPatient')
   console.log(req)
-  const {name, gender, patient_DOB} = req.body
-  // con.query("INSERT INTO `Basic_Patient_Info` (`patient_ID`, `name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (" +
-  // + 1250 + ", 'Bob', 21, '2000-12-20', 'male', 4087449840, '125 Sesame Street', 'percocet', 'Moderate pain', 1)" + name + "\" AND date_of_birth = \"" + patient_DOB+"\"", function (err, result, fields) {
-  //   if (err) throw err;
-  //   res.render('AddNewPatient', {title: "Add New Patient", data: result})
-  // });
+  const {patient_name, patient_gender, patient_age, patient_DOB, patient_phone_num, patient_address, patient_insurance, patient_insurance_type, patient_curr_medication, patient_health_condition} = req.body
+
+  console.log(patient_gender)
+  
+  con.query("INSERT INTO `Basic_Patient_Info` (`name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (\"" + 
+  patient_name + "\", \"" + patient_age +  "\", \"" + patient_DOB + "\", \"" + patient_phone_num + "\", \"" + patient_address + "\", \"" + patient_health_condition + "\", \"" + patient_curr_medication + "\", \"" +  patient_insurance + "\")", function (err, result, fields) {
+    if (err) throw err;
+    res.render('AddNewPatient', {title: "Add New Patient", data: result})
+  });
+
+  con.query("INSERT INTO `Insurance` (`type`, `company_name`) VALUES (\"" + patient_insurance_type + "\", \"" + patient_insurance +  "\")", function (err2, result2, fields2) {
+    if (err2) throw err2;
+  });
 
   res.render('AddNewPatient', {title: "Add New Patient"})
 });
@@ -94,7 +101,7 @@ app.get('/PatientFilteration', (req, res) => {
 
 app.post('/PatientFilteration', (req, res) => {
   console.log('PatientFilteration POST')
-  console.log(req)
+
   const {name, patient_DOB} = req.body
   con.query("SELECT * FROM Basic_Patient_Info WHERE name = \"" + name + "\" AND date_of_birth = \"" + patient_DOB+"\"", function (err, result, fields) {
     if (err) throw err;
