@@ -41,14 +41,44 @@ app.get('/AddNewEmployee', (req, res) => {
   res.render('AddNewEmployee', {title: "Sign Up"})
 });
 
+
 app.post('/AddNewEmployee', (req, res) => {
   console.log('AddNewEmployee')
-  console.log(req)
-  res.render('AddNewEmployee', {title: "Sign Up"})
+  //console.log(req)
+  const {name, username, password, type, office} = req.body
+  
+  con.query("INSERT INTO `Employee_Info` (`name`, `employee_type`, `office_name`) VALUES (\"" + name + "\", \"" + type + "\", \"" + office + "\")", function (err, result, fields) {
+    if (err) throw err;
+    //res.render('AddNewEmployee', {title: "Sign Up"})
+  });
+
+  con.query("SELECT employee_ID from `Employee_Info` WHERE name = \"" + name + "\" AND employee_type = \"" + type + "\" AND office_name = \"" + office + "\"", function (err, result, fields) {
+    if (err) throw err;
+    console.log(result[0].employee_ID)
+    con.query("INSERT INTO `Login_Info` (`username`, `password`, `type_of_user`, `employee_ID`) VALUES (\"" + username + "\", \"" + password +  "\", \"" + type + "\", \"" + result[0].employee_ID + "\")", function (err2, result2, fields2) {
+      if (err2) throw err2;
+      res.render('AddNewEmployee', {title: "Sign Up"})
+    });
+  });
+
+  // res.render('AddNewEmployee', {title: "Add New Employee"})
 });
 
 app.get('/AddNewPatient', (req, res) => {
   console.log('AddNewPatient')
+  res.render('AddNewPatient', {title: "Add New Patient", data: null})
+});
+
+app.post('/AddNewPatient', (req, res) => {
+  console.log('AddNewPatient')
+  console.log(req)
+  const {name, gender, patient_DOB} = req.body
+  // con.query("INSERT INTO `Basic_Patient_Info` (`patient_ID`, `name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (" +
+  // + 1250 + ", 'Bob', 21, '2000-12-20', 'male', 4087449840, '125 Sesame Street', 'percocet', 'Moderate pain', 1)" + name + "\" AND date_of_birth = \"" + patient_DOB+"\"", function (err, result, fields) {
+  //   if (err) throw err;
+  //   res.render('AddNewPatient', {title: "Add New Patient", data: result})
+  // });
+
   res.render('AddNewPatient', {title: "Add New Patient"})
 });
 
@@ -70,8 +100,6 @@ app.post('/PatientFilteration', (req, res) => {
     if (err) throw err;
     res.render('PatientFilteration', {title: "Patient Filteration", data: result})
   });
-
-  //res.render('Patient Filteration', {title: "Patient Filteration", data: result})
 });
 
 // Bob 2000-12-20
@@ -116,7 +144,3 @@ app.listen(3000);
 //         console.log(result.affectedRows + " record(s) updated");
 //     });
 //   });
-
-
-
-
