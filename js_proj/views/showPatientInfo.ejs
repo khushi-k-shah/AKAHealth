@@ -1,0 +1,37 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div>
+    <table class="table" width='80%'>
+        <% if (data) { %>
+            <tr style='text-align:left; background-color:#CCC'>
+                <th>patient_ID</th>
+                <th>name</th>
+                <th>age</th>
+                <th>date_of_birth</th>
+                <th>gender</th>
+            </tr>
+            <% data.forEach(function(patient){ %>
+                <tr>
+                    <td><%= patient.patient_ID %></td>
+                    <td><%= patient.name %></td>
+                    <td><%= patient.age %></td>
+                    <td><%= patient.date_of_birth %></td>
+                    <td><%= patient.gender %></td>
+                    <td><a class="btn btn-primary" href="/patient/<%= patient.patient_ID %>/edit" role="button">Edit Patient</a></td>
+                    <td>
+                        <form action="/patient/<%= patient.patient_ID %>?_method=DELETE" method="POST">
+                            <button type="submit" class="btn btn-danger">Delete Patient</button>
+                        </form>
+                    </td>
+                    <td><a class="btn btn-primary" href="/AddToAppointmentTable/<%= patient.patient_ID %>/add" role="button">Add Appt</a></td>
+                    <td><a class="btn btn-primary" href="/AddToAppointmentTable/<%= patient.patient_ID %>" role="button">View Appt</a></td>
+                </tr>
+            <% }) %>
+        <% } %>
+     
+    </table>
+
+</div>
+
+<%- include('partials/footer') %>

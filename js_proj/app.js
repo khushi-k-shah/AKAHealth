@@ -12,6 +12,7 @@ const app = express();
 
 var mysql = require('mysql');
 
+
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
@@ -25,6 +26,9 @@ app.set('views', path.join(__dirname, '/views'))
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
+
+const methodOverride = require('method-override')
+app.use(methodOverride('_method'))
 
 app.get('/', (req, res) => {
   console.log('index')
@@ -64,6 +68,71 @@ app.post('/AddNewEmployee', (req, res) => {
   // res.render('AddNewEmployee', {title: "Add New Employee"})
 });
 
+// khushi's code start //
+// edit
+app.get('/patient/:id/edit', (req, res) => {
+  const { id } = req.params;
+  // sql query to gather the information w that id
+  con.query("SELECT * FROM Basic_Patient_Info WHERE Patient_ID = " + id, function (err, result, fields) {
+    if (err) throw err;
+    //res.render('PatientFilteration', {title: "Patient Filteration", data: result})
+    res.render('editPatientInfo', { title: "Edit Patient Info", patient: result })
+  });
+});
+
+// update
+app.patch('/patient/:id', (req, res) => {
+  console.log(req.body)
+
+  const { id } = req.params;
+  const {patient_name, patient_gender, patient_age, patient_DOB, patient_phone_num, patient_address, patient_insurance, patient_insurance_type, patient_curr_medication, patient_health_condition} = req.body
+  
+  con.query("UPDATE `Basic_Patient_Info` SET `name` = \"" + patient_name + "\", `age` = \"" + 
+  patient_age + "\", `date_of_birth` = \"" + patient_DOB + "\", `gender` = \"" + patient_gender
+  + "\", `phone_number` = \"" + patient_phone_num + "\", `address` = \"" + patient_address 
+  + "\", `current_medication` = \"" + patient_curr_medication + "\", `underlying_health_condition` = \"" + patient_health_condition
+  + "\", `insurance_ID` = " + patient_insurance + " WHERE `Patient_ID` = " + id, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result)
+    console.log('in patch')
+    console.log("id " + id)
+    res.redirect('/patient/'+id)
+  });
+
+
+  //res.send("made patch req")
+  
+
+})
+
+// show
+app.get('/patient/:id', (req, res) => {
+  const { id } = req.params;
+  console.log('in show')
+  console.log("id " + id)
+  console.log(req.params)
+  // sql query to gather the information w that id
+
+  con.query("SELECT * FROM Basic_Patient_Info WHERE `Patient_ID` = " + id, function (err, result, fields) {
+    if (err) throw err;
+    res.render('showPatientInfo', {title: "Patient Information", data: result})
+  });
+});
+
+app.delete('/patient/:id', (req, res) => {
+  const { id } = req.params;
+  con.query("DELETE FROM Basic_Patient_Info WHERE `Patient_ID` = " + id, function (err, result, fields) {
+    if (err) throw err;
+    res.redirect('/MainMenu')
+  });
+  // sql query to delete row w that id from Basic Patient Info
+});
+
+// khushi's code end //
+
+
+
+
 app.get('/AddNewPatient', (req, res) => {
   console.log('AddNewPatient')
   res.render('AddNewPatient', {title: "Add New Patient", data: null})
@@ -72,19 +141,52 @@ app.get('/AddNewPatient', (req, res) => {
 app.post('/AddNewPatient', (req, res) => {
   console.log('AddNewPatient')
   console.log(req)
-  const {name, gender, patient_DOB} = req.body
-  // con.query("INSERT INTO `Basic_Patient_Info` (`patient_ID`, `name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (" +
-  // + 1250 + ", 'Bob', 21, '2000-12-20', 'male', 4087449840, '125 Sesame Street', 'percocet', 'Moderate pain', 1)" + name + "\" AND date_of_birth = \"" + patient_DOB+"\"", function (err, result, fields) {
-  //   if (err) throw err;
-  //   res.render('AddNewPatient', {title: "Add New Patient", data: result})
+  const {patient_name, patient_gender, patient_age, patient_DOB, patient_phone_num, patient_address, patient_insurance, patient_insurance_type, patient_curr_medication, patient_health_condition} = req.body
+
+  // console.log(patient_gender)
+  
+  con.query("INSERT INTO `Basic_Patient_Info` (`name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (\"" + 
+  patient_name + "\", \"" + patient_age +  "\", \"" + patient_DOB + "\", \"" + patient_gender + "\", \"" + patient_phone_num + "\", \"" + patient_address + "\", \"" + patient_health_condition + "\", \"" + patient_curr_medication + "\", \"" +  patient_insurance + "\")", function (err, result, fields) {
+    if (err) throw err;
+    // res.render('AddNewPatient', {title: "Add New Patient", data: result})
+    res.redirect('/MainMenu')
+  });
+
+  // con.query("INSERT INTO `Insurance` (`type`, `company_name`) VALUES (\"" + patient_insurance_type + "\", \"" + patient_insurance +  "\")", function (err2, result2, fields2) {
+  //   if (err2) throw err2;
   // });
 
-  res.render('AddNewPatient', {title: "Add New Patient"})
+  //res.render('AddNewPatient', {title: "Add New Patient"})
 });
 
-app.get('/AddToAppointmentTable', (req, res) => {
+app.get('/AddToAppointmentTable/:id/add', (req, res) => {
+  const { id } = req.params;
   console.log('AddToAppointmentTable')
-  res.render('AddToAppointmentTable', {title: "Add New Appointment"})
+  con.query("SELECT name FROM Basic_Patient_Info WHERE `Patient_ID` = " + id, function (err, result, fields) {
+    if (err) throw err;
+    var name = result[0].name;
+    res.render('AddToAppointmentTable', {title: "Add New Appointment", id, name})
+  });
+});
+
+app.post('/AddToAppointmentTable', (req, res) => {
+
+  console.log(req.body);
+  res.redirect('/MainMenu') // <-- change!!!!
+});
+
+// show
+app.get('/patient/:id', (req, res) => {
+  const { id } = req.params;
+  console.log('in show')
+  console.log("id " + id)
+  console.log(req.params)
+  // sql query to gather the information w that id
+
+  con.query("SELECT * FROM Basic_Patient_Info WHERE `Patient_ID` = " + id, function (err, result, fields) {
+    if (err) throw err;
+    res.render('showPatientInfo', {title: "Patient Information", data: result})
+  });
 });
 
 app.get('/PatientFilteration', (req, res) => {
@@ -94,11 +196,11 @@ app.get('/PatientFilteration', (req, res) => {
 
 app.post('/PatientFilteration', (req, res) => {
   console.log('PatientFilteration POST')
-  console.log(req)
+
   const {name, patient_DOB} = req.body
   con.query("SELECT * FROM Basic_Patient_Info WHERE name = \"" + name + "\" AND date_of_birth = \"" + patient_DOB+"\"", function (err, result, fields) {
     if (err) throw err;
-    res.render('PatientFilteration', {title: "Patient Filteration", data: result})
+    res.render('showPatientInfo', {title: "Patient Info", data: result})
   });
 });
 
