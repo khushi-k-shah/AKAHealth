@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS `Basic_Patient_Info` (
   `underlying_health_condition` varchar(50) NOT NULL,
   `insurance_ID` int(11) NOT NULL,
   primary key (`patient_ID`)
+
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 ALTER TABLE `Basic_Patient_Info`
@@ -52,6 +53,7 @@ CREATE TABLE IF NOT EXISTS `Appointments_Table` (
   `symptoms` varchar(50) NOT NULL,
   `treatment` varchar(50) NOT NULL,
   `appointment_time` DATETIME NOT NULL,
+
   `doctor_type` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -115,6 +117,7 @@ INSERT INTO `Employee_Info` (`name`, `employee_type`, `office_name`) VALUES
 ('Khushi', 'receptionist', 'A'),
 ('Miranda', 'doctor', 'B'),
 ('Natasha', 'receptionist', 'B');
+
 
 INSERT INTO `Appointments_Table` (`appointment_ID`, `employee_ID`, `patient_ID`, `symptoms`, `treatment`, `appointment_time`, `doctor_type`) VALUES
 (1, 1000, 1256, 'cough', 'motrin prescribed', '2020-11-21 11:23:43', 'family med'),

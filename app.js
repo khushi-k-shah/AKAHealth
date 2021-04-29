@@ -1,6 +1,7 @@
 'use strict'
 
 
+
 var express = require("express");
 const http = require('http');
 const router = express("router");
@@ -9,6 +10,7 @@ const path = require("path");
 var fs = require("fs");
 
 const app = express();
+
 
 var mysql = require('mysql');
 
@@ -89,26 +91,27 @@ app.get('/TablesToEdit', (req, res) => {
 
 
 
+
 // con.connect(function(err) {
 //   if (err) throw err;
   
 // });
 
-//router.get("/", sendIndex);
 
 //module.exports = router;
 
 app.listen(3000);
 
+
+
 // con.query("SELECT employee_ID, name, employee_type, office_name FROM Employee_Info", function (err, result, fields) {
 //   if (err) throw err;
-//   res.render('Patient Filteration', {data: result})
-   
+//   console.log(result);
+//   console.log(result[0].name);
+//   res.send(result[0].name)
 // });
 
-
-
-
+  
 
 //     var sql = "UPDATE Employee_Info SET employee_type = 'nurse' WHERE name = 'Aarushi'";
 //     con.query(sql, function (err, result) {
