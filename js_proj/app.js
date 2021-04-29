@@ -180,12 +180,12 @@ app.post('/AddToAppointmentTable', (req, res) => {
   // console.log(patient_gender)
   
   con.query("INSERT INTO `Appointments_Table` (`employee_ID`, `patient_ID`, `symptoms`, `treatment`, `appointment_time`, `doctor_type`) VALUES (\"" + 
-  employee_ID + "\", \"" + patient_ID + "\", \"" + symptoms + "\", \"" + treatment + "\", " + datetime + ":00 , \"" + doctor_type + "\")", function (err, result, fields) {
+  employee_ID + "\", \"" + patient_ID + "\", \"" + symptoms + "\", \"" + treatment + "\", \"" + datetime + ":00\" , \"" + doctor_type + "\")", function (err, result, fields) {
     if (err) throw err;
     // res.render('AddNewPatient', {title: "Add New Patient", data: result})
     res.redirect('/MainMenu')
   });
-  res.redirect('/MainMenu') // <-- change!!!!
+  //res.redirect('/MainMenu') // <-- change!!!!
 });
 
 // show
