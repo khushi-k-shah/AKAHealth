@@ -289,24 +289,35 @@ app.post('/StatPatient_ListByGender', (req, res) => {
   console.log('StatPatient_ListByGender')
 
   const {gender} = req.body
-
-  var out_total = "";
-
   var sql = "CALL retPatients(\"??\", @out_total); SELECT @out_total as output;";
   var inserts = [gender];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
-  console.log(sql);
 
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    console.log(out_total)
-    console.log(result[1])
-
     res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: result[1][0].output, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
   });
   
 });
+
+app.post('/StatPatient_ListByAge', (req, res) => {
+  console.log('StatPatient_ListByAge')
+
+  const {low_age, high_age} = req.body
+
+  var sql = "CALL patientsInRange(??, ??, @out_total); SELECT @out_total as output;";
+  var inserts = [low_age, high_age];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: result[1][0].output, patients_with_most_appts: null, most_common_illnesses: null})
+  });
+  
+});
+
 
 
 app.listen(3000);
