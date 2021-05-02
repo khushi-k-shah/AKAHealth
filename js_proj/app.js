@@ -244,6 +244,7 @@ app.post('/PatientFilteration', (req, res) => {
   console.log('PatientFilteration POST')
 
   const {name, patient_DOB} = req.body
+
   console.log(name);
   console.log(patient_DOB);
 
@@ -266,7 +267,20 @@ app.get('/TablesToEdit', (req, res) => {
   res.render('TablesToEdit', {title: "Edit Patient Info"})
 });
 
+app.get('/Stat', (req, res) => {
+  console.log('Stat')
+  res.render('Stat', {title: "Stats Page"})
+});
 
+app.get('/StatEmployee', (req, res) => {
+  console.log('StatEmployee')
+  res.render('Stat_Employee', {title: "Stats Employee Page"})
+});
+
+app.get('/StatPatient', (req, res) => {
+  console.log('StatPatient')
+  res.render('Stat_Patient', {title: "Stats Patient Page"})
+});
 
 //router.get("/signup", signUp);
 
