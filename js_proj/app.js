@@ -16,8 +16,8 @@ var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "password",
-    database: "cs348proj"
+    password: "",
+    database: "portal"
   });
 
 app.set('view engine', 'ejs')
@@ -50,13 +50,24 @@ app.post('/AddNewEmployee', (req, res) => {
   console.log('AddNewEmployee')
   //console.log(req)
   const {name, username, password, type, office} = req.body
+
+  var sql = "INSERT INTO `Employee_Info` (`name`, `employee_type`, `office_name`) VALUES (\"?\", \"?\", \"?\")";
+  var inserts = [name, type, office];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
   
-  con.query("INSERT INTO `Employee_Info` (`name`, `employee_type`, `office_name`) VALUES (\"" + name + "\", \"" + type + "\", \"" + office + "\")", function (err, result, fields) {
+  con.query(sql, function (err, result, fields) {
     if (err) throw err;
     //res.render('AddNewEmployee', {title: "Sign Up"})
   });
 
-  con.query("SELECT employee_ID from `Employee_Info` WHERE name = \"" + name + "\" AND employee_type = \"" + type + "\" AND office_name = \"" + office + "\"", function (err, result, fields) {
+  sql = "SELECT employee_ID from `Employee_Info` WHERE name = \"?\" AND employee_type = \"?\" AND office_name = \"?\"";
+  inserts = [name, type, office];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+  con.query(sql, function (err, result, fields) {
     if (err) throw err;
     console.log(result[0].employee_ID)
     con.query("INSERT INTO `Login_Info` (`username`, `password`, `type_of_user`, `employee_ID`) VALUES (\"" + username + "\", \"" + password +  "\", \"" + type + "\", \"" + result[0].employee_ID + "\")", function (err2, result2, fields2) {
@@ -73,7 +84,13 @@ app.post('/AddNewEmployee', (req, res) => {
 app.get('/patient/:id/edit', (req, res) => {
   const { id } = req.params;
   // sql query to gather the information w that id
-  con.query("SELECT * FROM Basic_Patient_Info WHERE Patient_ID = " + id, function (err, result, fields) {
+  var sql = "SELECT * FROM Basic_Patient_Info WHERE Patient_ID = ?";
+  var inserts = [id];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+  
+  con.query(sql, function (err, result, fields) {
     if (err) throw err;
     //res.render('PatientFilteration', {title: "Patient Filteration", data: result})
     res.render('editPatientInfo', { title: "Edit Patient Info", patient: result })
@@ -87,11 +104,13 @@ app.patch('/patient/:id', (req, res) => {
   const { id } = req.params;
   const {patient_name, patient_gender, patient_age, patient_DOB, patient_phone_num, patient_address, patient_insurance, patient_insurance_type, patient_curr_medication, patient_health_condition} = req.body
   
-  con.query("UPDATE `Basic_Patient_Info` SET `name` = \"" + patient_name + "\", `age` = \"" + 
-  patient_age + "\", `date_of_birth` = \"" + patient_DOB + "\", `gender` = \"" + patient_gender
-  + "\", `phone_number` = \"" + patient_phone_num + "\", `address` = \"" + patient_address 
-  + "\", `current_medication` = \"" + patient_curr_medication + "\", `underlying_health_condition` = \"" + patient_health_condition
-  + "\", `insurance_ID` = " + patient_insurance + " WHERE `Patient_ID` = " + id, function (err, result, fields) {
+  var sql = "UPDATE `Basic_Patient_Info` SET `name` = ?, `age` = ?, `date_of_birth` = ?, `gender` = ?, `phone_number` = ?, `address` = ?, `current_medication` = ?, `underlying_health_condition` = ?, `insurance_ID` = ? WHERE `Patient_ID` = ?";
+  var inserts = [patient_name, patient_age, patient_DOB, patient_gender, patient_phone_num, patient_address, patient_curr_medication, patient_health_condition, patient_insurance, id];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+  
+  con.query(sql, function (err, result, fields) {
     if (err) throw err;
     console.log(result)
     console.log('in patch')
@@ -113,7 +132,13 @@ app.get('/patient/:id', (req, res) => {
   console.log(req.params)
   // sql query to gather the information w that id
 
-  con.query("SELECT * FROM Basic_Patient_Info WHERE `Patient_ID` = " + id, function (err, result, fields) {
+  var sql = "SELECT * FROM Basic_Patient_Info WHERE `Patient_ID` = ?";
+  var inserts = [id];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+  
+  con.query(sql, function (err, result, fields) {
     if (err) throw err;
     res.render('showPatientInfo', {title: "Patient Information", data: result})
   });
@@ -121,7 +146,14 @@ app.get('/patient/:id', (req, res) => {
 
 app.delete('/patient/:id', (req, res) => {
   const { id } = req.params;
-  con.query("DELETE FROM Basic_Patient_Info WHERE `Patient_ID` = " + id, function (err, result, fields) {
+
+  var sql = "DELETE FROM Basic_Patient_Info WHERE `Patient_ID` = ?";
+  var inserts = [id];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+  
+  con.query(sql, function (err, result, fields) {
     if (err) throw err;
     res.redirect('/MainMenu')
   });
@@ -145,8 +177,13 @@ app.post('/AddNewPatient', (req, res) => {
 
   // console.log(patient_gender)
   
-  con.query("INSERT INTO `Basic_Patient_Info` (`name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (\"" + 
-  patient_name + "\", \"" + patient_age +  "\", \"" + patient_DOB + "\", \"" + patient_gender + "\", \"" + patient_phone_num + "\", \"" + patient_address + "\", \"" + patient_health_condition + "\", \"" + patient_curr_medication + "\", \"" +  patient_insurance + "\")", function (err, result, fields) {
+  var sql = "INSERT INTO `Basic_Patient_Info` (`name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (\"?\", \"?\", \"?\", \"?\", \"?\", \"?\", \"?\", \"?\", \"?\")";
+  var inserts = [patient_name, patient_age, patient_DOB, patient_gender, patient_phone_num, patient_address, patient_health_condition, patient_curr_medication, patient_insurance];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+  
+  con.query(sql, function (err, result, fields) {
     if (err) throw err;
     // res.render('AddNewPatient', {title: "Add New Patient", data: result})
     res.redirect('/MainMenu')
@@ -163,7 +200,13 @@ app.get('/AddToAppointmentTable/:id/add', (req, res) => {
   const { id } = req.params;
   console.log('AddToAppointmentTable')
 
-  con.query("SELECT name FROM Basic_Patient_Info WHERE `Patient_ID` = " + id, function (err, result, fields) {
+  var sql = "SELECT name FROM Basic_Patient_Info WHERE `Patient_ID` = ?";
+  var inserts = [id];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+  
+  con.query(sql, function (err, result, fields) {
     if (err) throw err;
     var name = result[0].name;
     res.render('AddToAppointmentTable', {title: "Add New Appointment", id, name})
@@ -174,32 +217,22 @@ app.post('/AddToAppointmentTable', (req, res) => {
   console.log('AddToAppointmentTable')
   console.log(req.body)
   const {employee_ID, patient_ID, patient_name, date, time, symptoms, treatment, doctor_type} = req.body
-
   
-  var datetime = date + "T" + time;
+  var datetime = date + "T" + time+":00";
   // console.log(patient_gender)
   
-  con.query("INSERT INTO `Appointments_Table` (`employee_ID`, `patient_ID`, `symptoms`, `treatment`, `appointment_time`, `doctor_type`) VALUES (\"" + 
-  employee_ID + "\", \"" + patient_ID + "\", \"" + symptoms + "\", \"" + treatment + "\", \"" + datetime + ":00\" , \"" + doctor_type + "\")", function (err, result, fields) {
+  var sql = "INSERT INTO `Appointments_Table` (`employee_ID`, `patient_ID`, `symptoms`, `treatment`, `appointment_time`, `doctor_type`) VALUES (?, ?, ?, ?, ? , ?)";
+  var inserts = [employee_ID, patient_ID, symptoms, treatment, datetime, doctor_type];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+  
+  con.query(sql, function (err, result, fields) {
     if (err) throw err;
     // res.render('AddNewPatient', {title: "Add New Patient", data: result})
     res.redirect('/MainMenu')
   });
   //res.redirect('/MainMenu') // <-- change!!!!
-});
-
-// show
-app.get('/patient/:id', (req, res) => {
-  const { id } = req.params;
-  console.log('in show')
-  console.log("id " + id)
-  console.log(req.params)
-  // sql query to gather the information w that id
-
-  con.query("SELECT * FROM Basic_Patient_Info WHERE `Patient_ID` = " + id, function (err, result, fields) {
-    if (err) throw err;
-    res.render('showPatientInfo', {title: "Patient Information", data: result})
-  });
 });
 
 app.get('/PatientFilteration', (req, res) => {
@@ -211,16 +244,17 @@ app.post('/PatientFilteration', (req, res) => {
   console.log('PatientFilteration POST')
 
   const {name, patient_DOB} = req.body
-  // var newname=""+name.substring(1, name.length()-1);
-  // console.log(newname);
 
-  var sql = "SELECT * FROM Basic_Patient_Info WHERE name = \"??\" AND date_of_birth = \"??\"";
+  console.log(name);
+  console.log(patient_DOB);
+
+  var sql = "SELECT * FROM Basic_Patient_Info WHERE name = \""+ "??" + "\" AND date_of_birth = \"" + "??" + "\"";
   var inserts = [name, patient_DOB];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
   console.log(sql);
 
-  con.query( sql, function (err, result, fields) {
+  con.query(sql, function (err, result, fields) {
     if (err) throw err;
     res.render('showPatientInfo', {title: "Patient Info", data: result})
   });
