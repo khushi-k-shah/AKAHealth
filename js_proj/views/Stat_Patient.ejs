@@ -5,13 +5,13 @@
     <div style="margin: 50px; text-align: center;">
         <h1>AKA Health Patient Statistics Page</h1>
     </div>
-    <form action="/" method="POST">
+    <form action="/StatPatient_ListByGender" method="POST">
         <label for="employee_ID">Patient List by Gender</label>
         <input type="text" size="20" name="gender" id="gender" placeholder="male/female" >
         <button type="text" class="btn btn-primary">GO</button>
     </form>
 
-    <label></label> <!-- add ejs result -->
+    <label><%= list_by_gender %></label> <!-- add ejs result -->
 
     <div>
         <br>
@@ -24,7 +24,7 @@
         <button type="text" class="btn btn-primary">GO</button>
     </form>
 
-    <label></label> <!-- add ejs result -->
+    <label><%= list_by_age %></label>
 
     <div>
         <br>
@@ -35,7 +35,7 @@
         <button type="text" class="btn btn-primary">GO</button>
     </form> 
     
-    <label></label> <!-- add ejs result -->
+    <label><%= patients_with_most_appts %></label>
 
     <div>
         <br>
@@ -46,7 +46,7 @@
         <button type="text" class="btn btn-primary">GO</button>
     </form>
 
-    <label></label> <!-- add ejs result -->
+    <label><%= most_common_illnesses %></label>
 
 </div>
 
