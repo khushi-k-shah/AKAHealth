@@ -5,27 +5,43 @@
         <h1>AKA Health Employee Statistics Page</h1>
     </div>
 
-    <form action="/AddToAppointmentTable" method="POST">
-        <label for="employee_ID">Patient List by Gender</label>
-        <input type="text" size="20" name="gender" id="gender" placeholder="male/female" >
+    <form action="/" method="POST">
+        <label>Number of Employees in A Dept. - Enter Dept. Name:</label>
+        <input type="text" size="20" name="dept_name" id="dept_name" placeholder="ex: Pediatrics" >
         <button type="text" class="btn btn-primary">GO</button>
     </form>
 
-    <form action="/AddToAppointmentTable" method="POST">
-        <label for="employee_ID">Patient List by Gender</label>
-        <input type="text" size="20" name="gender" id="gender" placeholder="male/female" >
+    <!-- <label><%= data.num-employees %></label> -->
+
+    <div>
+        <br>
+    </div>
+
+    <form action="/" method="POST">
+        <label>Doctors have experience with</label>
+        <input type="text" size="20" name="gender" id="gender" placeholder="ex: ER" >
         <button type="text" class="btn btn-primary">GO</button>
     </form>
-    <!-- <div style="margin: 40px; text-align: center;">
-        <a href="/TablesToEdit">
-          <button type="button" class="btn btn-primary btn-lg">Patient Statistics</button>
-         </a>
+
+    <div>
+        <br>
     </div>
-    <div style="margin: 40px; text-align:center;">
-        <a href="/PatientFilteration">
-            <button type="button" class="btn btn-success btn-lg">Employee Statistics</button>
-         </a>
-    </div> -->
+
+    <form action="/" method="POST">
+        <label for="employee_ID">Doctor(s) with the most appointments</label>
+        <button type="text" class="btn btn-primary">GO</button>
+    </form>
+
+    <div>
+        <br>
+    </div>
+
+    <form action="/" method="POST">
+        <label for="employee_ID">Doctor(s) with the most accesses</label>
+        <button type="text" class="btn btn-primary">GO</button>
+    </form>
+
+
 </div>
 
 
