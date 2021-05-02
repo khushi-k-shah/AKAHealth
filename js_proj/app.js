@@ -211,7 +211,16 @@ app.post('/PatientFilteration', (req, res) => {
   console.log('PatientFilteration POST')
 
   const {name, patient_DOB} = req.body
-  con.query("SELECT * FROM Basic_Patient_Info WHERE name = \"" + name + "\" AND date_of_birth = \"" + patient_DOB+"\"", function (err, result, fields) {
+  // var newname=""+name.substring(1, name.length()-1);
+  // console.log(newname);
+
+  var sql = "SELECT * FROM Basic_Patient_Info WHERE name = \"??\" AND date_of_birth = \"??\"";
+  var inserts = [name, patient_DOB];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+
+  con.query( sql, function (err, result, fields) {
     if (err) throw err;
     res.render('showPatientInfo', {title: "Patient Info", data: result})
   });
@@ -224,7 +233,20 @@ app.get('/TablesToEdit', (req, res) => {
   res.render('TablesToEdit', {title: "Edit Patient Info"})
 });
 
+app.get('/Stat', (req, res) => {
+  console.log('Stat')
+  res.render('Stat', {title: "Stats Page"})
+});
 
+app.get('/StatEmployee', (req, res) => {
+  console.log('StatEmployee')
+  res.render('Stat_Employee', {title: "Stats Employee Page"})
+});
+
+app.get('/StatPatient', (req, res) => {
+  console.log('StatPatient')
+  res.render('Stat_Patient', {title: "Stats Patient Page"})
+});
 
 //router.get("/signup", signUp);
 
