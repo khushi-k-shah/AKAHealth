@@ -42,7 +42,10 @@
                             <td><%= patient.age %></td>
                             <td><%= patient.date_of_birth %></td>
                             <td><%= patient.gender %></td>
+                            <td><a class="btn btn-primary" href="/patient/<%= patient.patient_ID %>/edit" role="button">Edit</a></td>
+                            <td><a class="btn btn-primary" href="#" role="button">Delete</a></td>
                         </tr>
+                    
                     <% }) %>
                 <% } %>
              
