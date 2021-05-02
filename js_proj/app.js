@@ -18,6 +18,7 @@ var con = mysql.createConnection({
     user: "root",
     password: "password",
     database: "cs348proj"
+
   });
 
 app.set('view engine', 'ejs')
