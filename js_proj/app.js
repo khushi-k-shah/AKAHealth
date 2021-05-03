@@ -16,8 +16,13 @@ var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
+<<<<<<< HEAD
     password: "stock123",
     database: "portal",
+=======
+    password: "password",
+    database: "cs348proj",
+>>>>>>> e696f7ba6650ba5198c5d8e5008f14454e7fbdab
     multipleStatements: true
   });
 
@@ -73,8 +78,9 @@ app.get('/MainMenu', (req, res) => {
   console.log('mainmenu')
   if (!req.session.user_id) {
     res.redirect("/")
+  } else {
+    res.render('MainMenu', {title: "Main Menu", employee_id: req.session.user_id})
   }
-  res.render('MainMenu', {title: "Main Menu", employee_id: req.session.user_id})
 });
 
 app.get('/AddNewEmployee', (req, res) => {
@@ -130,6 +136,7 @@ app.post('/AddNewEmployee', (req, res) => {
 app.get('/patient/:id/edit', (req, res) => {
   if (!req.session.user_id) {
     res.redirect("/")
+    return;
   }
   const { id } = req.params;
   // sql query to gather the information w that id
@@ -187,6 +194,7 @@ app.patch('/patient/:id', (req, res) => {
 app.get('/patient/:id', (req, res) => {
   if (!req.session.user_id) {
     res.redirect("/")
+    return;
   }
   const { id } = req.params;
   console.log('in show')
@@ -259,6 +267,7 @@ app.delete('/patient/:id', (req, res) => {
 app.get('/employee/:id', (req, res) => {
   if (!req.session.user_id) {
     res.redirect("/")
+    return;
   }
   const { id } = req.params;
   // sql query to gather the information w that id
@@ -281,8 +290,9 @@ app.get('/AddNewPatient', (req, res) => {
   console.log('AddNewPatient')
   if (!req.session.user_id) {
     res.redirect("/")
+  } else {
+    res.render('AddNewPatient', {title: "Add New Patient", data: null})
   }
-  res.render('AddNewPatient', {title: "Add New Patient", data: null})
 });
 
 app.post('/AddNewPatient', (req, res) => {
@@ -360,6 +370,7 @@ app.post('/AddNewPatient', (req, res) => {
 app.get('/AddToAppointmentTable/:id/add', (req, res) => {
   if (!req.session.user_id) {
     res.redirect("/")
+    return;
   }
   const { id } = req.params;
   console.log('AddToAppointmentTable')
@@ -417,6 +428,7 @@ app.post('/AddToAppointmentTable', (req, res) => {
 app.get('/ViewAppointments/:id', (req, res) => {
   if (!req.session.user_id) {
     res.redirect("/")
+    return;
   }
   const { id } = req.params;
   console.log('View Appointments')
@@ -453,6 +465,7 @@ app.get('/PatientFilteration', (req, res) => {
   console.log('PatientFilteration GET')
   if (!req.session.user_id) {
     res.redirect("/")
+    return;
   }
   res.render('PatientFilteration', {title: "Patient Filteration", data: null})
 });
@@ -488,6 +501,7 @@ app.get('/Stat', (req, res) => {
   console.log('Stat')
   if (!req.session.user_id) {
     res.redirect("/")
+    return;
   }
   res.render('Stat', {title: "Stats Page"})
 });
@@ -496,6 +510,7 @@ app.get('/StatEmployee', (req, res) => {
   console.log('StatEmployee')
   if (!req.session.user_id) {
     res.redirect("/")
+    return;
   }
   res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
 });
@@ -504,6 +519,7 @@ app.get('/StatPatient', (req, res) => {
   console.log('StatPatient')
   if (!req.session.user_id) {
     res.redirect("/")
+    return;
   }
   res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
 });
@@ -544,20 +560,20 @@ app.post('/StatPatient_ListByAge', (req, res) => {
 app.post('/StatPatient_MostAppts', (req, res) => {
   console.log('StatPatient_MostAppts')
 
-  var sql = "";
+  var sql = "select Basic_Patient_Info.name, count(Appointments_Table.Patient_ID) as cnt from Appointments_Table join Basic_Patient_Info where Appointments_Table.Patient_ID = Basic_Patient_Info.Patient_ID group by Appointments_Table.Patient_ID having count(Appointments_Table.Patient_ID) >= (select max(a.cnt) from (select count(patient_ID) as cnt from Appointments_Table group by patient_ID) as a);";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
+    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: result[0], most_common_illnesses: null})
   });
 });
 
 app.post('/StatPatient_CommonIll', (req, res) => {
   console.log('StatPatient_CommonIll')
 
-  var sql = "";
+  var sql = "select symptoms, count(symptoms) as cnt from Appointments_Table group by symptoms having count(symptoms) >= (select max(a.cnt) from (select count(symptoms) as cnt from Appointments_Table group by symptoms) as a);";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
+    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: result[0]})
   });
 });
 
