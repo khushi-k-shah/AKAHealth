@@ -35,7 +35,9 @@
         <button type="text" class="btn btn-primary">GO</button>
     </form> 
     
-    <label><%= patients_with_most_appts %></label>
+    <% if (patients_with_most_appts != null) { %>
+        <label>Patient <%= patients_with_most_appts.name %> has had <%= patients_with_most_appts.cnt %> Appointments</label>
+    <% } %>
 
     <div>
         <br>
@@ -46,7 +48,9 @@
         <button type="text" class="btn btn-primary">GO</button>
     </form>
 
-    <label><%= most_common_illnesses %></label>
+    <% if (most_common_illnesses != null) { %>
+        <label><%= most_common_illnesses.cnt %> patients have <%= most_common_illnesses.symptoms %></label>
+    <% } %>
 
 </div>
 

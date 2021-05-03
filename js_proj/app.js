@@ -363,20 +363,20 @@ app.post('/StatPatient_ListByAge', (req, res) => {
 app.post('/StatPatient_MostAppts', (req, res) => {
   console.log('StatPatient_MostAppts')
 
-  var sql = "";
+  var sql = "select Basic_Patient_Info.name, count(Appointments_Table.Patient_ID) as cnt from Appointments_Table join Basic_Patient_Info where Appointments_Table.Patient_ID = Basic_Patient_Info.Patient_ID group by Appointments_Table.Patient_ID having count(Appointments_Table.Patient_ID) >= (select max(a.cnt) from (select count(patient_ID) as cnt from Appointments_Table group by patient_ID) as a);";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
+    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: result[0], most_common_illnesses: null})
   });
 });
 
 app.post('/StatPatient_CommonIll', (req, res) => {
   console.log('StatPatient_CommonIll')
 
-  var sql = "";
+  var sql = "select symptoms, count(symptoms) as cnt from Appointments_Table group by symptoms having count(symptoms) >= (select max(a.cnt) from (select count(symptoms) as cnt from Appointments_Table group by symptoms) as a);";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
+    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: result[0]})
   });
 });
 
@@ -386,20 +386,13 @@ app.post('/StatEmployee_ExpWith', (req, res) => {
 
   const {specialty} = req.body
 
-  console.log(req.body)
-  console.log(specialty)
-
-  var out_total = "";
-
   var sql = "CALL getDocType(\"??\", @out_total); SELECT @out_total as output;";
   var inserts = [specialty];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
-  console.log(sql);
 
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    console.log(out_total)
     console.log(result[1])
     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: result[1][0].output, doc_with_most_appointments: null, doc_with_most_accesses: null})
   });
@@ -416,34 +409,32 @@ app.post('/StatEmployee_NumEmployees', (req, res) => {
   var inserts = [dept_name];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
-  console.log(sql);
 
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    console.log(result[1])
     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: result[1][0].output, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
   });
 });
 
-app.post('/StatEmployee_MostAppts', (req, res) => {
-  console.log('StatPatient_MostAppts')
+// app.post('/StatEmployee_MostAppts', (req, res) => {
+//   console.log('StatPatient_MostAppts')
 
-  var sql = "";
-  con.query(sql, function (err, result, fields) {
-    if (err) throw err;
-    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
-  });
-});
+//   var sql = "";
+//   con.query(sql, function (err, result, fields) {
+//     if (err) throw err;
+//     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
+//   });
+// });
 
-app.post('/StatEmployee_MostAccesses', (req, res) => {
-  console.log('StatEmployee_MostAccesses')
+// app.post('/StatEmployee_MostAccesses', (req, res) => {
+//   console.log('StatEmployee_MostAccesses')
 
-  var sql = "";
-  con.query(sql, function (err, result, fields) {
-    if (err) throw err;
-    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
-  });
-});
+//   var sql = "";
+//   con.query(sql, function (err, result, fields) {
+//     if (err) throw err;
+//     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
+//   });
+// });
 
 
 app.listen(3000);
