@@ -92,10 +92,12 @@ ALTER TABLE `Login_Info`
 --
 
 CREATE TABLE IF NOT EXISTS `Employee_Accesses` (
+  `access_ID` int NOT NULL AUTO_INCREMENT,
   `access_time` varchar(50) NOT NULL,
   `access_type` varchar(50) NOT NULL,
   `employee_ID` int(11) NOT NULL,
-  `patient_ID` int(11) NOT NULL
+  `patient_ID` int(11) NOT NULL,
+  primary key (`access_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 ALTER TABLE `Employee_Accesses`
