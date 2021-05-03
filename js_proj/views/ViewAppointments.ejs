@@ -1,0 +1,34 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div>
+    <table class="table" width='80%'>
+        <% if (data) { %>
+            <tr style='text-align:left; background-color:#CCC'>
+                <th>Appointment_ID</th>
+                <th>Employee_ID</th>
+                <th>Patient_ID</th>
+                <th>Symptoms</th>
+                <th>Treatment</th>
+                <th>Appointment Time</th>
+                <th>Doctor's Profession</th>
+                
+            </tr>
+            <% data.forEach(function(appt){ %>
+                <tr>
+                    <td><%= appt.appointment_ID %></td>
+                    <td><%= appt.employee_ID %></td>
+                    <td><%= appt.patient_ID %></td>
+                    <td><%= appt.symptoms %></td>
+                    <td><%= appt.treatment %></td>
+                    <td><%= appt.appointment_time %></td>
+                    <td><%= appt.doctor_type %></td>
+                </tr>
+            <% }) %>
+        <% } %>
+     
+    </table>
+
+</div>
+
+<%- include('partials/footer') %>
