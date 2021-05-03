@@ -4,20 +4,24 @@
         <h1 class="display-2">AKA Health Login Page</h1>
         <p class="lead">Please enter your login information to get started!</p>
 
-        <form action="/MainMenu" method="GET">
+        <form action="/login" method="POST">
+
             <div class="form-group">
-                <label for="med_username" class="form-label">Username</label>
-                <input type="email" class="form-control" id="med_username" aria-describedby="emailHelp" placeholder="username">
-                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                <label for="username">Username</label>
+                <input type="text" class="form-control" name="username" id="username" placeholder="Username" required>
             </div>
-            <div class="form-group" style="margin-top: 20px;">
-                <label for="med_password" class="form-label">Password</label>
-                <input type="password" class="form-control" id="med_password" placeholder="password">
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
             </div>
             
-            <a href=""> <!-- main menu -->
-                <button type="submit" class="btn btn-success" id="demo">Submit</button>
-            </a>
+            <!-- <a href=""> 
+                <button type="submit" class="btn btn-success" id="demo">Login</button>
+            </a> -->
+
+            <div class="form-check">
+                <button type="text" class="btn btn-primary" style="margin-top: 20px;">Login</button>
+            </div>
             
         </form>
         <div style="margin-top: 50px; margin-bottom: 50px; margin-left:0px;">
