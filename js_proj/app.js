@@ -16,7 +16,7 @@ var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
+    password: "stock123",
     database: "portal",
     multipleStatements: true
   });
@@ -475,25 +475,27 @@ app.post('/StatEmployee_NumEmployees', (req, res) => {
   });
 });
 
-// app.post('/StatEmployee_MostAppts', (req, res) => {
-//   console.log('StatPatient_MostAppts')
+app.post('/StatEmployee_MostAppts', (req, res) => {
+  console.log('StatPatient_MostAppts')
 
-//   var sql = "";
-//   con.query(sql, function (err, result, fields) {
-//     if (err) throw err;
-//     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
-//   });
-// });
+  var sql = "SELECT e.name as name from Employee_info e, Appointments_Table a WHERE a.employee_ID = e.employee_ID GROUP BY e.employee_ID HAVING count(a.employee_ID) = (Select MAX(cnt) from (SELECT count(employee_ID) as cnt from Appointments_Table group by employee_ID) tb);";
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result)
+    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: result[0].name, doc_with_most_accesses: null})
+  });
+});
 
-// app.post('/StatEmployee_MostAccesses', (req, res) => {
-//   console.log('StatEmployee_MostAccesses')
+app.post('/StatEmployee_MostAccesses', (req, res) => {
+  console.log('StatEmployee_MostAccesses')
 
-//   var sql = "";
-//   con.query(sql, function (err, result, fields) {
-//     if (err) throw err;
-//     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
-//   });
-// });
+  var sql = "SELECT e.name as name from Employee_info e, Employee_Accesses a WHERE a.employee_ID = e.employee_ID GROUP BY e.employee_ID HAVING count(a.employee_ID) = (Select MAX(cnt) from (SELECT count(employee_ID) as cnt from Employee_Accesses group by employee_ID) tb);";
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result)
+    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: result[0].name})
+  });
+});
 
 
 app.listen(3000);
