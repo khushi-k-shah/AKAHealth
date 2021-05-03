@@ -1,0 +1,29 @@
+<%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
+<div class="container">
+    <h1 class="display-4">View Employee Profile</h1>
+
+    <% var p = patient[0] %>
+
+    <form action="/" method="">
+        <div class="form-group" name="margin: 20px; margin-left: 0px">
+            <label for="patient_name">Patient Name</label>
+            <input type="text" class="form-control" name="patient_name" value="<%= p.name %>" id="patient_name" placeholder="patient name" >
+        </div>
+        <div class="form-group" name="margin: 20px; margin-left: 0px">
+            <label for="patient_gender">Gender</label>
+            <input type="text" class="form-control" name="patient_gender" value="<%= p.gender %>" id="patient_gender" placeholder="male/female" >
+          </div>
+          <div class="form-group" name="margin: 20px; margin-left: 0px">
+            <label for="patient_age">Age</label>
+            <input type="text" class="form-control" name="patient_age" value="<%= p.age %>" id="patient_age" placeholder="age" >
+          </div>
+          <div class="form-group" name="margin: 20px; margin-left: 0px">
+            <label for="patient_DOB">Date of Birth</label>
+            <input type="text" class="form-control" name="patient_DOB" value="<%= p.date_of_birth %>" id="patient_DOB" placeholder="patient date of birth" >
+          </div>
+    </form>
+</div>
+
+<%- include('partials/footer') %>
