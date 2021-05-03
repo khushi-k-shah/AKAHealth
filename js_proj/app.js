@@ -16,8 +16,8 @@ var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
-    database: "portal",
+    password: "password",
+    database: "cs348proj",
     multipleStatements: true
   });
 
@@ -246,7 +246,7 @@ app.post('/AddNewPatient', (req, res) => {
 
   // console.log(patient_gender)
   
-  var sql = "INSERT INTO `Basic_Patient_Info` (`name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (\"?\", \"?\", \"?\", \"?\", \"?\", \"?\", \"?\", \"?\", \"?\")";
+  var sql = "INSERT INTO `Basic_Patient_Info` (`name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
   var inserts = [patient_name, patient_age, patient_DOB, patient_gender, patient_phone_num, patient_address, patient_health_condition, patient_curr_medication, patient_insurance];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
@@ -255,12 +255,31 @@ app.post('/AddNewPatient', (req, res) => {
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     // res.render('AddNewPatient', {title: "Add New Patient", data: result})
-    res.redirect('/MainMenu')
   });
 
-  // con.query("INSERT INTO `Insurance` (`type`, `company_name`) VALUES (\"" + patient_insurance_type + "\", \"" + patient_insurance +  "\")", function (err2, result2, fields2) {
-  //   if (err2) throw err2;
-  // });
+  var insurance_name = ""
+  var type = ""
+  if (patient_insurance < 1000) {
+    insurance_name = "Cigna"
+    type = "Health"
+  } else if (patient_insurance < 2000) {
+    insurance_name = "United"
+    type = "Health"
+  } else {
+    insurance_name = "Aetna"
+    type = "Dental"
+  }
+
+  var sql2 = "INSERT INTO `Insurance` (`insurance_ID`, `type`, `company_name`) VALUES (?, ?, ?)";
+  var inserts2 = [patient_insurance, type, insurance_name];
+  sql2 = mysql.format(sql2, inserts2);
+  sql2 = sql2.replace(/`/g, "");
+  console.log(sql2);
+
+  con.query(sql2, function (err2, result2, fields2) {
+    if (err2) throw err2;
+    res.redirect('/MainMenu')
+  });
 
   //res.render('AddNewPatient', {title: "Add New Patient"})
 });
@@ -475,25 +494,25 @@ app.post('/StatEmployee_NumEmployees', (req, res) => {
   });
 });
 
-// app.post('/StatEmployee_MostAppts', (req, res) => {
-//   console.log('StatPatient_MostAppts')
+app.post('/StatEmployee_MostAppts', (req, res) => {
+  console.log('StatPatient_MostAppts')
 
-//   var sql = "";
-//   con.query(sql, function (err, result, fields) {
-//     if (err) throw err;
-//     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
-//   });
-// });
+  var sql = "";
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
+  });
+});
 
-// app.post('/StatEmployee_MostAccesses', (req, res) => {
-//   console.log('StatEmployee_MostAccesses')
+app.post('/StatEmployee_MostAccesses', (req, res) => {
+  console.log('StatEmployee_MostAccesses')
 
-//   var sql = "";
-//   con.query(sql, function (err, result, fields) {
-//     if (err) throw err;
-//     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
-//   });
-// });
+  var sql = "";
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
+  });
+});
 
 
 app.listen(3000);
