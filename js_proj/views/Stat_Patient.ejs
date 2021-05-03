@@ -17,7 +17,7 @@
         <br>
     </div>
 
-    <form action="/" method="POST">
+    <form action="/StatPatient_ListByAge" method="POST">
         <label for="employee_ID">Patient List in Age Range</label>
         <input type="number" size="1" name="low_age" id="low_age" placeholder="0">
         <input type="number" size="1" name="high_age" id="high_age" placeholder="100" >
@@ -30,23 +30,27 @@
         <br>
     </div>
 
-    <form action="/" method="POST">
+    <form action="/StatPatient_MostAppts" method="POST">
         <label for="employee_ID">Patient(s) with the most appointments</label>
         <button type="text" class="btn btn-primary">GO</button>
     </form> 
     
-    <label><%= patients_with_most_appts %></label>
+    <% if (patients_with_most_appts != null) { %>
+        <label>Patient <%= patients_with_most_appts.name %> has had <%= patients_with_most_appts.cnt %> Appointments</label>
+    <% } %>
 
     <div>
         <br>
     </div>
 
-    <form action="/" method="POST">
+    <form action="/StatPatient_CommonIll" method="POST">
         <label for="employee_ID">Most common Illness(es)</label>
         <button type="text" class="btn btn-primary">GO</button>
     </form>
 
-    <label><%= most_common_illnesses %></label>
+    <% if (most_common_illnesses != null) { %>
+        <label><%= most_common_illnesses.cnt %> patients have <%= most_common_illnesses.symptoms %></label>
+    <% } %>
 
 </div>
 
