@@ -36,7 +36,9 @@
         <button type="text" class="btn btn-primary">GO</button>
     </form>
 
-    <label><%= doc_with_most_appointments %></label> <!-- add ejs result -->
+    <% if (doc_with_most_appointments != null) { %>
+        <label>Doctor(s) with most appointments: <%= doc_with_most_appointments %></label> <!-- add ejs result -->
+    <% } %>
 
     <div>
         <br>
@@ -47,7 +49,9 @@
         <button type="text" class="btn btn-primary">GO</button>
     </form>
 
-    <label><%= doc_with_most_accesses %></label> <!-- add ejs result -->
+    <% if (doc_with_most_accesses != null) { %>
+        <label>Doctor(s) with most accesses: <%= doc_with_most_accesses %></label> <!-- add ejs result -->
+    <% } %>
 
 
 </div>
