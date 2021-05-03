@@ -16,8 +16,9 @@ var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "Happiness070!",
-    database: "portal"
+    password: "password",
+    database: "portal",
+    multipleStatements: true
   });
 
 app.set('view engine', 'ejs')
@@ -318,44 +319,80 @@ app.get('/Stat', (req, res) => {
 
 app.get('/StatEmployee', (req, res) => {
   console.log('StatEmployee')
-  res.render('Stat_Employee', {title: "Stats Employee Page"})
+  res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
 });
 
 app.get('/StatPatient', (req, res) => {
   console.log('StatPatient')
-  res.render('Stat_Patient', {title: "Stats Patient Page"})
+  res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
 });
 
-//router.get("/signup", signUp);
 
+app.post('/StatPatient_ListByGender', (req, res) => {
+  console.log('StatPatient_ListByGender')
 
+  const {gender} = req.body
 
+  var out_total = "";
 
+  var sql = "CALL retPatients(\"??\", @out_total); SELECT @out_total as output;";
+  var inserts = [gender];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
 
-// con.connect(function(err) {
-//   if (err) throw err;
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    console.log(out_total)
+    console.log(result[1])
+
+    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: result[1][0].output, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
+  });
   
-// });
+});
 
-//router.get("/", sendIndex);
+app.post('/StatEmployee_ExpWith', (req, res) => {
+  console.log('/StatEmployee_ExpWith')
 
-//module.exports = router;
+  const {specialty} = req.body
+
+  console.log(req.body)
+  console.log(specialty)
+
+  var out_total = "";
+
+  var sql = "CALL getDocType(\"??\", @out_total); SELECT @out_total as output;";
+  var inserts = [specialty];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    console.log(out_total)
+    console.log(result[1])
+    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: result[1][0].output, doc_with_most_appointments: null, doc_with_most_accesses: null})
+  });
+  
+});
+
+app.post('/StatEmployee_NumEmployees', (req, res) => {
+  console.log('/StatEmployee_NumEmployees')
+
+  const {dept_name} = req.body
+
+  var sql = "CALL getDeptNum(\"??\", @out_total); SELECT @out_total as output;";
+  var inserts = [dept_name];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result[1])
+    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: result[1][0].output, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
+  });
+  
+});
 
 app.listen(3000);
-
-// con.query("SELECT employee_ID, name, employee_type, office_name FROM Employee_Info", function (err, result, fields) {
-//   if (err) throw err;
-//   res.render('Patient Filteration', {data: result})
-   
-// });
-
-
-
-
-
-//     var sql = "UPDATE Employee_Info SET employee_type = 'nurse' WHERE name = 'Aarushi'";
-//     con.query(sql, function (err, result) {
-//         if (err) throw err;
-//         console.log(result.affectedRows + " record(s) updated");
-//     });
-//   });

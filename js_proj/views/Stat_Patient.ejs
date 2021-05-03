@@ -1,20 +1,53 @@
 <%- include('partials/header') %>
+<%- include('partials/navbar') %>
 
 <div class="container-fluid">
     <div style="margin: 50px; text-align: center;">
         <h1>AKA Health Patient Statistics Page</h1>
     </div>
+    <form action="/StatPatient_ListByGender" method="POST">
+        <label for="employee_ID">Patient List by Gender</label>
+        <input type="text" size="20" name="gender" id="gender" placeholder="male/female" >
+        <button type="text" class="btn btn-primary">GO</button>
+    </form>
 
-    <!-- <div style="margin: 40px; text-align: center;">
-        <a href="/TablesToEdit">
-          <button type="button" class="btn btn-primary btn-lg">Patient Statistics</button>
-         </a>
+    <label><%= list_by_gender %></label> <!-- add ejs result -->
+
+    <div>
+        <br>
     </div>
-    <div style="margin: 40px; text-align:center;">
-        <a href="/PatientFilteration">
-            <button type="button" class="btn btn-success btn-lg">Employee Statistics</button>
-         </a>
-    </div> -->
+
+    <form action="/" method="POST">
+        <label for="employee_ID">Patient List in Age Range</label>
+        <input type="number" size="1" name="low_age" id="low_age" placeholder="0">
+        <input type="number" size="1" name="high_age" id="high_age" placeholder="100" >
+        <button type="text" class="btn btn-primary">GO</button>
+    </form>
+
+    <label><%= list_by_age %></label>
+
+    <div>
+        <br>
+    </div>
+
+    <form action="/" method="POST">
+        <label for="employee_ID">Patient(s) with the most appointments</label>
+        <button type="text" class="btn btn-primary">GO</button>
+    </form> 
+    
+    <label><%= patients_with_most_appts %></label>
+
+    <div>
+        <br>
+    </div>
+
+    <form action="/" method="POST">
+        <label for="employee_ID">Most common Illness(es)</label>
+        <button type="text" class="btn btn-primary">GO</button>
+    </form>
+
+    <label><%= most_common_illnesses %></label>
+
 </div>
 
 
