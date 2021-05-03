@@ -88,7 +88,7 @@ app.post('/AddNewEmployee', (req, res) => {
   //console.log(req)
   const {name, username, password, type, office} = req.body
 
-  var sql = "INSERT INTO `Employee_Info` (`name`, `employee_type`, `office_name`) VALUES (?, ?, ?)";
+  var sql = "BEGIN; INSERT INTO `Employee_Info` (`name`, `employee_type`, `office_name`) VALUES (?, ?, ?); COMMIT;";
   var inserts = [name, type, office];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
@@ -109,7 +109,7 @@ app.post('/AddNewEmployee', (req, res) => {
     console.log(result[0].employee_ID)
     req.session.user_id = result[0].employee_ID;
 
-    sql = "INSERT INTO `Login_Info` (`username`, `password`, `type_of_user`, `employee_ID`) VALUES (?, ?, ?, ?)";
+    sql = "BEGIN; INSERT INTO `Login_Info` (`username`, `password`, `type_of_user`, `employee_ID`) VALUES (?, ?, ?, ?); COMMIT;";
     inserts = [username, password, type, result[0].employee_ID];
     sql = mysql.format(sql, inserts);
     sql = sql.replace(/`/g, "");
@@ -168,7 +168,7 @@ app.patch('/patient/:id', (req, res) => {
     if (err2) throw err2;
   });
 
-  sql = "UPDATE `Basic_Patient_Info` SET `name` = ?, `age` = ?, `date_of_birth` = ?, `gender` = ?, `phone_number` = ?, `address` = ?, `current_medication` = ?, `underlying_health_condition` = ?, `insurance_ID` = ? WHERE `Patient_ID` = ?";
+  sql = "BEGIN; UPDATE `Basic_Patient_Info` SET `name` = ?, `age` = ?, `date_of_birth` = ?, `gender` = ?, `phone_number` = ?, `address` = ?, `current_medication` = ?, `underlying_health_condition` = ?, `insurance_ID` = ? WHERE `Patient_ID` = ?; COMMIT;";
   inserts = [patient_name, patient_age, patient_DOB, patient_gender, patient_phone_num, patient_address, patient_curr_medication, patient_health_condition, patient_insurance, id];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
@@ -292,7 +292,7 @@ app.post('/AddNewPatient', (req, res) => {
 
   // console.log(patient_gender)
   
-  var sql = "INSERT INTO `Basic_Patient_Info` (`name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  var sql = "BEGIN; INSERT INTO `Basic_Patient_Info` (`name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); COMMIT;";
   var inserts = [patient_name, patient_age, patient_DOB, patient_gender, patient_phone_num, patient_address, patient_health_condition, patient_curr_medication, patient_insurance];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
@@ -343,7 +343,7 @@ app.post('/AddNewPatient', (req, res) => {
     type = "Dental"
   }
 
-  var sql2 = "INSERT INTO `Insurance` (`insurance_ID`, `type`, `company_name`) VALUES (?, ?, ?)";
+  var sql2 = "BEGIN; INSERT INTO `Insurance` (`insurance_ID`, `type`, `company_name`) VALUES (?, ?, ?); COMMIT;";
   var inserts2 = [patient_insurance, type, insurance_name];
   sql2 = mysql.format(sql2, inserts2);
   sql2 = sql2.replace(/`/g, "");
@@ -400,7 +400,7 @@ app.post('/AddToAppointmentTable', (req, res) => {
     if (err2) throw err2;
   });
   
-  sql = "INSERT INTO `Appointments_Table` (`employee_ID`, `patient_ID`, `symptoms`, `treatment`, `appointment_time`, `doctor_type`) VALUES (?, ?, ?, ?, ? , ?)";
+  sql = "BEGIN; INSERT INTO `Appointments_Table` (`employee_ID`, `patient_ID`, `symptoms`, `treatment`, `appointment_time`, `doctor_type`) VALUES (?, ?, ?, ?, ? , ?); COMMIT;";
   inserts = [employee_ID, patient_ID, symptoms, treatment, datetime, doctor_type];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
