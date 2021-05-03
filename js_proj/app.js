@@ -16,7 +16,7 @@ var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "password",
+    password: "Happiness070!",
     database: "portal",
     multipleStatements: true
   });
@@ -88,7 +88,7 @@ app.post('/AddNewEmployee', (req, res) => {
   //console.log(req)
   const {name, username, password, type, office} = req.body
 
-  var sql = "INSERT INTO `Employee_Info` (`name`, `employee_type`, `office_name`) VALUES (?, ?, ?)";
+  var sql = "BEGIN; INSERT INTO `Employee_Info` (`name`, `employee_type`, `office_name`) VALUES (?, ?, ?); COMMIT;";
   var inserts = [name, type, office];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
@@ -109,7 +109,7 @@ app.post('/AddNewEmployee', (req, res) => {
     console.log(result[0].employee_ID)
     req.session.user_id = result[0].employee_ID;
 
-    sql = "INSERT INTO `Login_Info` (`username`, `password`, `type_of_user`, `employee_ID`) VALUES (?, ?, ?, ?)";
+    sql = "BEGIN; INSERT INTO `Login_Info` (`username`, `password`, `type_of_user`, `employee_ID`) VALUES (?, ?, ?, ?); COMMIT;";
     inserts = [username, password, type, result[0].employee_ID];
     sql = mysql.format(sql, inserts);
     sql = sql.replace(/`/g, "");
@@ -153,8 +153,23 @@ app.patch('/patient/:id', (req, res) => {
   const { id } = req.params;
   const {patient_name, patient_gender, patient_age, patient_DOB, patient_phone_num, patient_address, patient_insurance, patient_insurance_type, patient_curr_medication, patient_health_condition} = req.body
   
-  var sql = "UPDATE `Basic_Patient_Info` SET `name` = ?, `age` = ?, `date_of_birth` = ?, `gender` = ?, `phone_number` = ?, `address` = ?, `current_medication` = ?, `underlying_health_condition` = ?, `insurance_ID` = ? WHERE `Patient_ID` = ?";
-  var inserts = [patient_name, patient_age, patient_DOB, patient_gender, patient_phone_num, patient_address, patient_curr_medication, patient_health_condition, patient_insurance, id];
+  var today = new Date();
+  var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  var dateTime = date+' '+time;
+
+  var sql = "INSERT INTO `Employee_Accesses` (`access_time`, `access_type`, `employee_ID`, `patient_ID`) VALUES (?, ?, ?, ?)";
+  var inserts = [dateTime, "update", req.session.user_id, id];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+
+  con.query(sql , function (err2, result2, fields2) {
+    if (err2) throw err2;
+  });
+
+  sql = "BEGIN; UPDATE `Basic_Patient_Info` SET `name` = ?, `age` = ?, `date_of_birth` = ?, `gender` = ?, `phone_number` = ?, `address` = ?, `current_medication` = ?, `underlying_health_condition` = ?, `insurance_ID` = ? WHERE `Patient_ID` = ?; COMMIT;";
+  inserts = [patient_name, patient_age, patient_DOB, patient_gender, patient_phone_num, patient_address, patient_curr_medication, patient_health_condition, patient_insurance, id];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
   console.log(sql);
@@ -177,10 +192,26 @@ app.get('/patient/:id', (req, res) => {
   console.log('in show')
   console.log("id " + id)
   console.log(req.params)
+
+  var today = new Date();
+  var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  var dateTime = date+' '+time;
+
+  var sql = "INSERT INTO `Employee_Accesses` (`access_time`, `access_type`, `employee_ID`, `patient_ID`) VALUES (?, ?, ?, ?)";
+  var inserts = [dateTime, "view", req.session.user_id, id];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+
+  con.query(sql , function (err2, result2, fields2) {
+    if (err2) throw err2;
+  });
+
   // sql query to gather the information w that id
 
-  var sql = "SELECT * FROM Basic_Patient_Info WHERE `Patient_ID` = ?";
-  var inserts = [id];
+  sql = "SELECT * FROM Basic_Patient_Info WHERE `Patient_ID` = ?";
+  inserts = [id];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
   console.log(sql);
@@ -194,8 +225,23 @@ app.get('/patient/:id', (req, res) => {
 app.delete('/patient/:id', (req, res) => {
   const { id } = req.params;
 
-  var sql = "DELETE FROM Basic_Patient_Info WHERE `Patient_ID` = ?";
-  var inserts = [id];
+  var today = new Date();
+  var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  var dateTime = date+' '+time;
+
+  var sql = "INSERT INTO `Employee_Accesses` (`access_time`, `access_type`, `employee_ID`, `patient_ID`) VALUES (?, ?, ?, ?)";
+  var inserts = [dateTime, "delete", req.session.user_id, id];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+
+  con.query(sql , function (err2, result2, fields2) {
+    if (err2) throw err2;
+  });
+
+  sql = "DELETE FROM Basic_Patient_Info WHERE `Patient_ID` = ?";
+  inserts = [id];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
   console.log(sql);
@@ -246,7 +292,7 @@ app.post('/AddNewPatient', (req, res) => {
 
   // console.log(patient_gender)
   
-  var sql = "INSERT INTO `Basic_Patient_Info` (`name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+  var sql = "BEGIN; INSERT INTO `Basic_Patient_Info` (`name`, `age`, `date_of_birth`, `gender`, `phone_number`, `address`, `current_medication`, `underlying_health_condition`, `insurance_ID`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?); COMMIT;";
   var inserts = [patient_name, patient_age, patient_DOB, patient_gender, patient_phone_num, patient_address, patient_health_condition, patient_curr_medication, patient_insurance];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
@@ -255,6 +301,33 @@ app.post('/AddNewPatient', (req, res) => {
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     // res.render('AddNewPatient', {title: "Add New Patient", data: result})
+    
+    var sql2 = "SELECT patient_ID FROM Basic_Patient_Info WHERE `name` = ? AND `date_of_birth` = ? AND `phone_number` = ? AND `address` = ?";
+    var inserts2 = [patient_name, patient_DOB, patient_phone_num, patient_address];
+    sql2 = mysql.format(sql2, inserts2);
+    sql2 = sql2.replace(/`/g, "");
+    console.log(sql2);
+    
+    con.query(sql2, function (err2, result2, fields2) {
+      if (err2) throw err2;
+
+      var today = new Date();
+      var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+      var dateTime = date+' '+time;
+
+      var sql3 = "INSERT INTO `Employee_Accesses` (`access_time`, `access_type`, `employee_ID`, `patient_ID`) VALUES (?, ?, ?, ?)";
+      var inserts3 = [dateTime, "insert", req.session.user_id, result2[0].patient_ID];
+      sql3 = mysql.format(sql3, inserts3);
+      sql3 = sql3.replace(/`/g, "");
+      console.log(sql3);
+
+      con.query(sql3 , function (err3, result3, fields3) {
+        if (err3) throw err3;
+      });
+    });
+
+    // res.redirect('/MainMenu')
   });
 
   var insurance_name = ""
@@ -270,7 +343,7 @@ app.post('/AddNewPatient', (req, res) => {
     type = "Dental"
   }
 
-  var sql2 = "INSERT INTO `Insurance` (`insurance_ID`, `type`, `company_name`) VALUES (?, ?, ?)";
+  var sql2 = "BEGIN; INSERT INTO `Insurance` (`insurance_ID`, `type`, `company_name`) VALUES (?, ?, ?); COMMIT;";
   var inserts2 = [patient_insurance, type, insurance_name];
   sql2 = mysql.format(sql2, inserts2);
   sql2 = sql2.replace(/`/g, "");
@@ -300,7 +373,7 @@ app.get('/AddToAppointmentTable/:id/add', (req, res) => {
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     var name = result[0].name;
-    res.render('AddToAppointmentTable', {title: "Add New Appointment", id, name})
+    res.render('AddToAppointmentTable', {title: "Add New Appointment", id, name, employee_id: req.session.user_id})
   });
 });
 
@@ -311,9 +384,24 @@ app.post('/AddToAppointmentTable', (req, res) => {
   
   var datetime = date + "T" + time+":00";
   // console.log(patient_gender)
+
+  var today = new Date();
+  var current_date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  var current_time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  var current_dateTime = current_date +' '+ current_time;
+
+  var sql = "INSERT INTO `Employee_Accesses` (`access_time`, `access_type`, `employee_ID`, `patient_ID`) VALUES (?, ?, ?, ?)";
+  var inserts = [current_dateTime, "insert", req.session.user_id, patient_ID];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+
+  con.query(sql , function (err2, result2, fields2) {
+    if (err2) throw err2;
+  });
   
-  var sql = "INSERT INTO `Appointments_Table` (`employee_ID`, `patient_ID`, `symptoms`, `treatment`, `appointment_time`, `doctor_type`) VALUES (?, ?, ?, ?, ? , ?)";
-  var inserts = [employee_ID, patient_ID, symptoms, treatment, datetime, doctor_type];
+  sql = "BEGIN; INSERT INTO `Appointments_Table` (`employee_ID`, `patient_ID`, `symptoms`, `treatment`, `appointment_time`, `doctor_type`) VALUES (?, ?, ?, ?, ? , ?); COMMIT;";
+  inserts = [employee_ID, patient_ID, symptoms, treatment, datetime, doctor_type];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
   console.log(sql);
@@ -332,6 +420,21 @@ app.get('/ViewAppointments/:id', (req, res) => {
   }
   const { id } = req.params;
   console.log('View Appointments')
+
+  var today = new Date();
+  var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+  var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+  var dateTime = date+' '+time;
+
+  var sql = "INSERT INTO `Employee_Accesses` (`access_time`, `access_type`, `employee_ID`, `patient_ID`) VALUES (?, ?, ?, ?)";
+  var inserts = [dateTime, "view", req.session.user_id, id];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+
+  con.query(sql , function (err2, result2, fields2) {
+    if (err2) throw err2;
+  });
 
   var sql = "SELECT * FROM Appointments_Table WHERE `Patient_ID` = ?";
   var inserts = [id];
@@ -376,10 +479,10 @@ app.post('/PatientFilteration', (req, res) => {
 
 // Bob 2000-12-20
 
-app.get('/TablesToEdit', (req, res) => {
-  console.log('TablesToEdit')
-  res.render('TablesToEdit', {title: "Edit Patient Info"})
-});
+// app.get('/TablesToEdit', (req, res) => {
+//   console.log('TablesToEdit')
+//   res.render('TablesToEdit', {title: "Edit Patient Info"})
+// });
 
 app.get('/Stat', (req, res) => {
   console.log('Stat')
@@ -441,20 +544,20 @@ app.post('/StatPatient_ListByAge', (req, res) => {
 app.post('/StatPatient_MostAppts', (req, res) => {
   console.log('StatPatient_MostAppts')
 
-  var sql = "select Basic_Patient_Info.name, count(Appointments_Table.Patient_ID) as cnt from Appointments_Table join Basic_Patient_Info where Appointments_Table.Patient_ID = Basic_Patient_Info.Patient_ID group by Appointments_Table.Patient_ID having count(Appointments_Table.Patient_ID) >= (select max(a.cnt) from (select count(patient_ID) as cnt from Appointments_Table group by patient_ID) as a);";
+  var sql = "";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: result[0], most_common_illnesses: null})
+    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
   });
 });
 
 app.post('/StatPatient_CommonIll', (req, res) => {
   console.log('StatPatient_CommonIll')
 
-  var sql = "select symptoms, count(symptoms) as cnt from Appointments_Table group by symptoms having count(symptoms) >= (select max(a.cnt) from (select count(symptoms) as cnt from Appointments_Table group by symptoms) as a);";
+  var sql = "";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: result[0]})
+    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
   });
 });
 
@@ -464,13 +567,20 @@ app.post('/StatEmployee_ExpWith', (req, res) => {
 
   const {specialty} = req.body
 
+  console.log(req.body)
+  console.log(specialty)
+
+  var out_total = "";
+
   var sql = "CALL getDocType(\"??\", @out_total); SELECT @out_total as output;";
   var inserts = [specialty];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
+  console.log(sql);
 
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
+    console.log(out_total)
     console.log(result[1])
     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: result[1][0].output, doc_with_most_appointments: null, doc_with_most_accesses: null})
   });
@@ -487,9 +597,11 @@ app.post('/StatEmployee_NumEmployees', (req, res) => {
   var inserts = [dept_name];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
+  console.log(sql);
 
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
+    console.log(result[1])
     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: result[1][0].output, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
   });
 });
