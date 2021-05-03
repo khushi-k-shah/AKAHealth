@@ -1,4 +1,6 @@
 <%- include('partials/header') %>
+<%- include('partials/navbar') %>
+
 
 <div class="container-fluid">
     <div style="margin: 50px; text-align: center;">
@@ -29,7 +31,7 @@
         <br>
     </div>
 
-    <form action="/" method="POST">
+    <form action="/StatEmployee_MostAppts" method="POST">
         <label for="employee_ID">Doctor(s) with the most appointments</label>
         <button type="text" class="btn btn-primary">GO</button>
     </form>
@@ -40,7 +42,7 @@
         <br>
     </div>
 
-    <form action="/" method="POST">
+    <form action="/StatEmployee_MostAccesses" method="POST">
         <label for="employee_ID">Doctor(s) with the most accesses</label>
         <button type="text" class="btn btn-primary">GO</button>
     </form>

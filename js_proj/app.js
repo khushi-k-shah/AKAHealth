@@ -16,8 +16,8 @@ var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "stock123",
-    database: "portal",
+    password: "password",
+    database: "cs348proj",
     multipleStatements: true
 
   });
@@ -316,6 +316,27 @@ app.post('/StatPatient_ListByAge', (req, res) => {
     res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: result[1][0].output, patients_with_most_appts: null, most_common_illnesses: null})
   });
 });
+
+app.post('/StatPatient_MostAppts', (req, res) => {
+  console.log('StatPatient_MostAppts')
+
+  var sql = "";
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
+  });
+});
+
+app.post('/StatPatient_CommonIll', (req, res) => {
+  console.log('StatPatient_CommonIll')
+
+  var sql = "";
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
+  });
+});
+
     
 app.post('/StatEmployee_ExpWith', (req, res) => {
   console.log('/StatEmployee_ExpWith')
@@ -359,7 +380,26 @@ app.post('/StatEmployee_NumEmployees', (req, res) => {
     console.log(result[1])
     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: result[1][0].output, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
   });
-  
+});
+
+app.post('/StatEmployee_MostAppts', (req, res) => {
+  console.log('StatPatient_MostAppts')
+
+  var sql = "";
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
+  });
+});
+
+app.post('/StatEmployee_MostAccesses', (req, res) => {
+  console.log('StatEmployee_MostAccesses')
+
+  var sql = "";
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
+  });
 });
 
 
