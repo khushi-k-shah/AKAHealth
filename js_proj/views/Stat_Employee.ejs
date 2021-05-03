@@ -5,25 +5,25 @@
         <h1>AKA Health Employee Statistics Page</h1>
     </div>
 
-    <form action="/" method="POST">
-        <label>Number of Employees in A Dept. - Enter Dept. Name:</label>
-        <input type="text" size="20" name="dept_name" id="dept_name" placeholder="ex: Pediatrics" >
+    <form action="/StatEmployee_NumEmployees" method="POST">
+        <label>Number of Employees per profession. - Enter profession:</label>
+        <input type="text" size="20" name="dept_name" id="dept_name" placeholder="ex: doctor" >
         <button type="text" class="btn btn-primary">GO</button>
     </form>
 
-     <label></label> <!-- add ejs result -->
+     <label><%= num_employees %></label> <!-- add ejs result -->
 
     <div>
         <br>
     </div>
 
-    <form action="/" method="POST">
+    <form action="/StatEmployee_ExpWith" method="POST">
         <label>Doctors have experience with</label>
-        <input type="text" size="20" name="specialty" id="specialty" placeholder="ex: ER" >
+        <input type="text" size="20" name="specialty" id="specialty" placeholder="ex: ENT" >
         <button type="text" class="btn btn-primary">GO</button>
     </form>
 
-    <label></label> <!-- add ejs result -->
+    <label><%= exp %></label> <!-- add ejs result -->
 
     <div>
         <br>
@@ -34,7 +34,7 @@
         <button type="text" class="btn btn-primary">GO</button>
     </form>
 
-    <label></label> <!-- add ejs result -->
+    <label><%= doc_with_most_appointments %></label> <!-- add ejs result -->
 
     <div>
         <br>
@@ -45,7 +45,7 @@
         <button type="text" class="btn btn-primary">GO</button>
     </form>
 
-    <label></label> <!-- add ejs result -->
+    <label><%= doc_with_most_accesses %></label> <!-- add ejs result -->
 
 
 </div>

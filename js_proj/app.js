@@ -16,8 +16,8 @@ var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "password",
-    database: "cs348proj",
+    password: "stock123",
+    database: "portal",
     multipleStatements: true
 
   });
@@ -276,7 +276,7 @@ app.get('/Stat', (req, res) => {
 
 app.get('/StatEmployee', (req, res) => {
   console.log('StatEmployee')
-  res.render('Stat_Employee', {title: "Stats Employee Page"})
+  res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
 });
 
 app.get('/StatPatient', (req, res) => {
@@ -315,9 +315,52 @@ app.post('/StatPatient_ListByAge', (req, res) => {
     if (err) throw err;
     res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: result[1][0].output, patients_with_most_appts: null, most_common_illnesses: null})
   });
+});
+    
+app.post('/StatEmployee_ExpWith', (req, res) => {
+  console.log('/StatEmployee_ExpWith')
+
+  const {specialty} = req.body
+
+  console.log(req.body)
+  console.log(specialty)
+
+  var out_total = "";
+
+  var sql = "CALL getDocType(\"??\", @out_total); SELECT @out_total as output;";
+  var inserts = [specialty];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    console.log(out_total)
+    console.log(result[1])
+    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: result[1][0].output, doc_with_most_appointments: null, doc_with_most_accesses: null})
+  });
   
 });
 
+
+app.post('/StatEmployee_NumEmployees', (req, res) => {
+  console.log('/StatEmployee_NumEmployees')
+
+  const {dept_name} = req.body
+
+  var sql = "CALL getDeptNum(\"??\", @out_total); SELECT @out_total as output;";
+  var inserts = [dept_name];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result[1])
+    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: result[1][0].output, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
+  });
+  
+});
 
 
 app.listen(3000);
