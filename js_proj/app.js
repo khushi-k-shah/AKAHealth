@@ -16,11 +16,7 @@ var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-<<<<<<< HEAD
     password: "Happiness070!",
-=======
-    password: "password",
->>>>>>> 644387b453ae793987cbf8fe971926d90ed836cc
     database: "portal",
     multipleStatements: true
   });
@@ -305,7 +301,6 @@ app.post('/AddNewPatient', (req, res) => {
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     // res.render('AddNewPatient', {title: "Add New Patient", data: result})
-<<<<<<< HEAD
     
     var sql2 = "SELECT patient_ID FROM Basic_Patient_Info WHERE `name` = ? AND `date_of_birth` = ? AND `phone_number` = ? AND `address` = ?";
     var inserts2 = [patient_name, patient_DOB, patient_phone_num, patient_address];
@@ -332,9 +327,7 @@ app.post('/AddNewPatient', (req, res) => {
       });
     });
 
-    res.redirect('/MainMenu')
-=======
->>>>>>> 644387b453ae793987cbf8fe971926d90ed836cc
+    // res.redirect('/MainMenu')
   });
 
   var insurance_name = ""
@@ -616,36 +609,22 @@ app.post('/StatEmployee_NumEmployees', (req, res) => {
 app.post('/StatEmployee_MostAppts', (req, res) => {
   console.log('StatPatient_MostAppts')
 
-<<<<<<< HEAD
-  var sql = "";
-  con.query(sql, function (err, result, fields) {
-    if (err) throw err;
-    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
-=======
   var sql = "SELECT e.name as name from Employee_info e, Appointments_Table a WHERE a.employee_ID = e.employee_ID GROUP BY e.employee_ID HAVING count(a.employee_ID) = (Select MAX(cnt) from (SELECT count(employee_ID) as cnt from Appointments_Table group by employee_ID) tb);";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     console.log(result)
     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: result[0].name, doc_with_most_accesses: null})
->>>>>>> 644387b453ae793987cbf8fe971926d90ed836cc
   });
 });
 
 app.post('/StatEmployee_MostAccesses', (req, res) => {
   console.log('StatEmployee_MostAccesses')
 
-<<<<<<< HEAD
-  var sql = "";
-  con.query(sql, function (err, result, fields) {
-    if (err) throw err;
-    res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
-=======
   var sql = "SELECT e.name as name from Employee_info e, Employee_Accesses a WHERE a.employee_ID = e.employee_ID GROUP BY e.employee_ID HAVING count(a.employee_ID) = (Select MAX(cnt) from (SELECT count(employee_ID) as cnt from Employee_Accesses group by employee_ID) tb);";
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     console.log(result)
     res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: result[0].name})
->>>>>>> 644387b453ae793987cbf8fe971926d90ed836cc
   });
 });
 
