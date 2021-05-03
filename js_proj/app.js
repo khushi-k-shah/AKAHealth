@@ -16,7 +16,7 @@ var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "",
+    password: "Happiness070!",
     database: "portal"
   });
 
@@ -51,7 +51,7 @@ app.post('/AddNewEmployee', (req, res) => {
   //console.log(req)
   const {name, username, password, type, office} = req.body
 
-  var sql = "INSERT INTO `Employee_Info` (`name`, `employee_type`, `office_name`) VALUES (\"?\", \"?\", \"?\")";
+  var sql = "INSERT INTO `Employee_Info` (`name`, `employee_type`, `office_name`) VALUES (?, ?, ?)";
   var inserts = [name, type, office];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
@@ -62,7 +62,7 @@ app.post('/AddNewEmployee', (req, res) => {
     //res.render('AddNewEmployee', {title: "Sign Up"})
   });
 
-  sql = "SELECT employee_ID from `Employee_Info` WHERE name = \"?\" AND employee_type = \"?\" AND office_name = \"?\"";
+  sql = "SELECT employee_ID from `Employee_Info` WHERE name = ? AND employee_type = ? AND office_name = ?";
   inserts = [name, type, office];
   sql = mysql.format(sql, inserts);
   sql = sql.replace(/`/g, "");
@@ -70,9 +70,16 @@ app.post('/AddNewEmployee', (req, res) => {
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     console.log(result[0].employee_ID)
-    con.query("INSERT INTO `Login_Info` (`username`, `password`, `type_of_user`, `employee_ID`) VALUES (\"" + username + "\", \"" + password +  "\", \"" + type + "\", \"" + result[0].employee_ID + "\")", function (err2, result2, fields2) {
+
+    sql = "INSERT INTO `Login_Info` (`username`, `password`, `type_of_user`, `employee_ID`) VALUES (?, ?, ?, ?)";
+    inserts = [username, password, type, result[0].employee_ID];
+    sql = mysql.format(sql, inserts);
+    sql = sql.replace(/`/g, "");
+    console.log(sql);
+    con.query(sql , function (err2, result2, fields2) {
       if (err2) throw err2;
-      res.render('AddNewEmployee', {title: "Sign Up"})
+      //res.render('AddNewEmployee', {title: "Sign Up"})
+      res.redirect('/MainMenu');
     });
   });
 
@@ -162,7 +169,27 @@ app.delete('/patient/:id', (req, res) => {
 
 // khushi's code end //
 
+// employee code //
 
+// NOte need to send ID to main menu!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+// get ID and store as global var when they login
+app.get('/employee/:id', (req, res) => {
+  const { id } = req.params;
+  // sql query to gather the information w that id
+  var sql = "SELECT * FROM Employee_Info WHERE employee_ID = ?";
+  var inserts = [id];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+  
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    //res.render('PatientFilteration', {title: "Patient Filteration", data: result})
+    res.render('viewEmployee', { title: "View Employee Profile", employee: result })
+  });
+});
+
+// end employee code //
 
 
 app.get('/AddNewPatient', (req, res) => {
@@ -230,9 +257,26 @@ app.post('/AddToAppointmentTable', (req, res) => {
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     // res.render('AddNewPatient', {title: "Add New Patient", data: result})
-    res.redirect('/MainMenu')
+    res.redirect('/ViewAppointments/' + patient_ID)
   });
   //res.redirect('/MainMenu') // <-- change!!!!
+});
+
+app.get('/ViewAppointments/:id', (req, res) => {
+  const { id } = req.params;
+  console.log('View Appointments')
+
+  var sql = "SELECT * FROM Appointments_Table WHERE `Patient_ID` = ?";
+  var inserts = [id];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+  
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    res.render('ViewAppointments', {title: "View Patient's Past Appointments", data: result})
+  });
 });
 
 app.get('/PatientFilteration', (req, res) => {
