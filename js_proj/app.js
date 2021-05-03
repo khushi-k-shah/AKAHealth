@@ -5,6 +5,7 @@ var express = require("express");
 const http = require('http');
 const router = express("router");
 const path = require("path");
+const session = require("express-session");
 
 var fs = require("fs");
 
@@ -12,12 +13,11 @@ const app = express();
 
 var mysql = require('mysql');
 
-
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-    password: "password",
-    database: "cs348proj",
+    password: "",
+    database: "portal",
     multipleStatements: true
   });
 
@@ -27,6 +27,7 @@ app.set('views', path.join(__dirname, '/views'))
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({extended:true}))
 app.use(express.json())
+app.use(session({secret: 'notsignedin'}))
 
 const methodOverride = require('method-override')
 app.use(methodOverride('_method'))
@@ -36,9 +37,44 @@ app.get('/', (req, res) => {
   res.render('index', {title: "Login Page"})
 });
 
+app.post('/login', (req, res) => {
+  console.log("login");
+  const {username, password} = req.body;
+  console.log(req.body);
+
+  var sql = "SELECT * FROM Login_info WHERE username = ?";
+  var inserts = [username];
+  sql = mysql.format(sql, inserts);
+  sql = sql.replace(/`/g, "");
+  console.log(sql);
+  
+  con.query(sql, function (err, result, fields) {
+    if (err) throw err;
+    console.log(result);
+    console.log(result[0].password);
+    if (result[0].password === password) {
+      req.session.user_id = result[0].employee_ID;
+      res.redirect("/MainMenu")
+    }
+    else {
+      res.redirect('/')
+    }
+  });
+});
+
+app.post('/logout', (req, res) => {
+  req.session.user_id = null;
+  console.log("in logout")
+  console.log(req.session.user_id);
+  res.redirect("/");
+});
+
 app.get('/MainMenu', (req, res) => {
   console.log('mainmenu')
-  res.render('MainMenu', {title: "Main Menu"})
+  if (!req.session.user_id) {
+    res.redirect("/")
+  }
+  res.render('MainMenu', {title: "Main Menu", employee_id: req.session.user_id})
 });
 
 app.get('/AddNewEmployee', (req, res) => {
@@ -71,12 +107,14 @@ app.post('/AddNewEmployee', (req, res) => {
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
     console.log(result[0].employee_ID)
+    req.session.user_id = result[0].employee_ID;
 
     sql = "INSERT INTO `Login_Info` (`username`, `password`, `type_of_user`, `employee_ID`) VALUES (?, ?, ?, ?)";
     inserts = [username, password, type, result[0].employee_ID];
     sql = mysql.format(sql, inserts);
     sql = sql.replace(/`/g, "");
     console.log(sql);
+
     con.query(sql , function (err2, result2, fields2) {
       if (err2) throw err2;
       //res.render('AddNewEmployee', {title: "Sign Up"})
@@ -90,6 +128,9 @@ app.post('/AddNewEmployee', (req, res) => {
 // khushi's code start //
 // edit
 app.get('/patient/:id/edit', (req, res) => {
+  if (!req.session.user_id) {
+    res.redirect("/")
+  }
   const { id } = req.params;
   // sql query to gather the information w that id
   var sql = "SELECT * FROM Basic_Patient_Info WHERE Patient_ID = ?";
@@ -125,15 +166,13 @@ app.patch('/patient/:id', (req, res) => {
     console.log("id " + id)
     res.redirect('/patient/'+id)
   });
-
-
-  //res.send("made patch req")
-  
-
 })
 
 // show
 app.get('/patient/:id', (req, res) => {
+  if (!req.session.user_id) {
+    res.redirect("/")
+  }
   const { id } = req.params;
   console.log('in show')
   console.log("id " + id)
@@ -171,10 +210,10 @@ app.delete('/patient/:id', (req, res) => {
 // khushi's code end //
 
 // employee code //
-
-// NOte need to send ID to main menu!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// get ID and store as global var when they login
 app.get('/employee/:id', (req, res) => {
+  if (!req.session.user_id) {
+    res.redirect("/")
+  }
   const { id } = req.params;
   // sql query to gather the information w that id
   var sql = "SELECT * FROM Employee_Info WHERE employee_ID = ?";
@@ -185,7 +224,6 @@ app.get('/employee/:id', (req, res) => {
   
   con.query(sql, function (err, result, fields) {
     if (err) throw err;
-    //res.render('PatientFilteration', {title: "Patient Filteration", data: result})
     res.render('viewEmployee', { title: "View Employee Profile", employee: result })
   });
 });
@@ -195,6 +233,9 @@ app.get('/employee/:id', (req, res) => {
 
 app.get('/AddNewPatient', (req, res) => {
   console.log('AddNewPatient')
+  if (!req.session.user_id) {
+    res.redirect("/")
+  }
   res.render('AddNewPatient', {title: "Add New Patient", data: null})
 });
 
@@ -225,6 +266,9 @@ app.post('/AddNewPatient', (req, res) => {
 });
 
 app.get('/AddToAppointmentTable/:id/add', (req, res) => {
+  if (!req.session.user_id) {
+    res.redirect("/")
+  }
   const { id } = req.params;
   console.log('AddToAppointmentTable')
 
@@ -264,6 +308,9 @@ app.post('/AddToAppointmentTable', (req, res) => {
 });
 
 app.get('/ViewAppointments/:id', (req, res) => {
+  if (!req.session.user_id) {
+    res.redirect("/")
+  }
   const { id } = req.params;
   console.log('View Appointments')
 
@@ -282,6 +329,9 @@ app.get('/ViewAppointments/:id', (req, res) => {
 
 app.get('/PatientFilteration', (req, res) => {
   console.log('PatientFilteration GET')
+  if (!req.session.user_id) {
+    res.redirect("/")
+  }
   res.render('PatientFilteration', {title: "Patient Filteration", data: null})
 });
 
@@ -314,16 +364,25 @@ app.get('/TablesToEdit', (req, res) => {
 
 app.get('/Stat', (req, res) => {
   console.log('Stat')
+  if (!req.session.user_id) {
+    res.redirect("/")
+  }
   res.render('Stat', {title: "Stats Page"})
 });
 
 app.get('/StatEmployee', (req, res) => {
   console.log('StatEmployee')
+  if (!req.session.user_id) {
+    res.redirect("/")
+  }
   res.render('Stat_Employee', {title: "Stats Employee Page", num_employees: null, exp: null, doc_with_most_appointments: null, doc_with_most_accesses: null})
 });
 
 app.get('/StatPatient', (req, res) => {
   console.log('StatPatient')
+  if (!req.session.user_id) {
+    res.redirect("/")
+  }
   res.render('Stat_Patient', {title: "Stats Patient Page",  list_by_gender: null, list_by_age: null, patients_with_most_appts: null, most_common_illnesses: null})
 });
 

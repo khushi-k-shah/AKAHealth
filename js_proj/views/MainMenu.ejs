@@ -22,16 +22,16 @@
 				<button type="button" class="btn btn-danger btn-lg">Add New Patient</button>
          	</a>
 		</div>
-		<!-- <div style="margin: 40px; text-align:center;">
-			<a href="/employee/:id">
+		<div style="margin: 40px; text-align:center;">
+			<a href="/employee/<%= employee_id %>">
 				<button type="button" class="btn btn-primary btn-lg">View Employee Profile</button>
          	</a>
-		</div> -->
+		</div>
 
 		<div style="margin: 150px; text-align:center;">
-			<a href="/">
-				<button type="button" class="btn btn-dark btn-lg">Sign Out</button>
-         	</a>
+			<form action="/logout" method="POST">
+				<button class="btn btn-dark btn-lg">Sign Out</button>
+			</form>
 		</div>
 
 
