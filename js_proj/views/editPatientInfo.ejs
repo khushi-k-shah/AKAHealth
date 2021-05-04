@@ -10,11 +10,11 @@
     <form action="/patient/<%= p.patient_ID %>?_method=PATCH" method="POST">
         <div class="form-group" name="margin: 20px; margin-left: 0px">
           <label for="patient_ID">Patient ID</label>
-          <input type="text" class="form-control" name="patient_ID" value="<%= p.patient_ID %>" id="patient_ID" placeholder="patient ID" disabled>
+          <input type="text" class="form-control" name="patient_ID" value="<%= p.patient_ID %>" id="patient_ID" placeholder="patient ID" readonly>
       </div>
         <div class="form-group" name="margin: 20px; margin-left: 0px">
             <label for="patient_name">Patient Name</label>
-            <input type="text" class="form-control" name="patient_name" value="<%= p.name %>" id="patient_name" placeholder="patient name" >
+            <input type="text" class="form-control" name="patient_name" value="<%= p.name %>" id="patient_name" placeholder="patient name" readonly>
         </div>
         <div class="form-group" name="margin: 20px; margin-left: 0px">
             <label for="patient_gender">Gender</label>
