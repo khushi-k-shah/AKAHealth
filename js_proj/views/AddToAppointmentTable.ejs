@@ -8,15 +8,15 @@
         <form action="/AddToAppointmentTable" method="POST">
             <div class="form-group">
                 <label for="employee_ID">Employee ID</label>
-                <input type="number" class="form-control" name="employee_ID" value ="<%= employee_id %>" id="employee_ID" placeholder="Employee ID" >
+                <input type="number" class="form-control" name="employee_ID" value ="<%= employee_id %>" id="employee_ID" placeholder="Employee ID" readonly>
             </div>
             <div class="form-group">
                 <label for="patient_ID">Patient ID</label>
-                <input type="number" class="form-control" name="patient_ID" value ="<%= id %>" id="patient_ID" placeholder="Patient ID" >
+                <input type="number" class="form-control" name="patient_ID" value ="<%= id %>" id="patient_ID" placeholder="Patient ID" readonly>
             </div>
             <div class="form-group">
                 <label for="patient_name">Patient Name</label>
-                <input type="text" class="form-control" name="patient_name" value= "<%= name %>" id="patient_name" placeholder="Patient Name" >
+                <input type="text" class="form-control" name="patient_name" value= "<%= name %>" id="patient_name" placeholder="Patient Name" readonly>
             </div>
             <div class="form-group">
                 <label for="date">Appointment Date</label>
