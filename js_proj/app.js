@@ -16,13 +16,8 @@ var mysql = require('mysql');
 var con = mysql.createConnection({
     host: "localhost",
     user: "root",
-<<<<<<< HEAD
     password: "stock123",
     database: "portal",
-=======
-    password: "password",
-    database: "cs348proj",
->>>>>>> e696f7ba6650ba5198c5d8e5008f14454e7fbdab
     multipleStatements: true
   });
 
