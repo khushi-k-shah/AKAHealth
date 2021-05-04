@@ -52,6 +52,17 @@
         <label><%= most_common_illnesses.cnt %> patients have <%= most_common_illnesses.symptoms %></label>
     <% } %>
 
+    <div>
+        <br>
+    </div>
+
+    <form action="/StatPatient_getMeds" method="POST">
+        <label for="employee_ID">get the number of patients currently taking medication</label>
+        <button type="text" class="btn btn-primary">GO</button>
+    </form>
+
+    <label><%= get_num_meds %></label>
+
 </div>
 
 
